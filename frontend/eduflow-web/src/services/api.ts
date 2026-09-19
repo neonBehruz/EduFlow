@@ -70,6 +70,7 @@ import {
   ReferralDto,
   AvailableTeacherDto,
 } from '../types';
+import { handleMockApiRequest } from './mockService';
 
 const apiBase = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL.replace(/\/+$/, '')}/api`
@@ -91,10 +92,26 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Response Interceptor: Handle 401
+// Response Interceptor: Handle 401 and seamless Mock Fallback when Backend is offline/unreachable on Vercel
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    const isOffline =
+      !error.response ||
+      error.response.status === 404 ||
+      error.response.status === 405 ||
+      error.code === 'ERR_NETWORK' ||
+      error.message?.includes('Network Error');
+
+    if (isOffline && error.config) {
+      const url = error.config.url || '';
+      const method = error.config.method || 'get';
+      const mock = handleMockApiRequest(url, method, error.config.data);
+      if (mock) {
+        return Promise.resolve(mock);
+      }
+    }
+
     if (error.response?.status === 401) {
       localStorage.removeItem('eduflow_token');
       localStorage.removeItem('eduflow_user');
@@ -107,9 +124,26 @@ api.interceptors.response.use(
 );
 
 export const authApi = {
-  login: (data: any) => api.post<ApiResponse<AuthResponse>>('/auth/login', data).then((r) => r.data),
+  login: async (data: any) => {
+    try {
+      const res = await api.post<ApiResponse<AuthResponse>>('/auth/login', data);
+      return res.data;
+    } catch (err: any) {
+      const fallback = handleMockApiRequest('/auth/login', 'post', data);
+      if (fallback) return fallback.data;
+      throw err;
+    }
+  },
   register: (data: any) => api.post<ApiResponse<AuthResponse>>('/auth/register', data).then((r) => r.data),
-  getMe: () => api.get<ApiResponse<User>>('/auth/me').then((r) => r.data),
+  getMe: async () => {
+    try {
+      const res = await api.get<ApiResponse<User>>('/auth/me');
+      return res.data;
+    } catch {
+      const fallback = handleMockApiRequest('/auth/me', 'get');
+      return fallback ? fallback.data : { success: false, data: null };
+    }
+  },
   updateProfile: (data: { firstName: string; lastName: string; phoneNumber: string; specialization?: string; password?: string }) =>
     api.put<ApiResponse<User>>('/auth/profile', data).then((r) => r.data),
 };
