@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { useTheme } from '../../context/ThemeContext';
+import { useOptionalTheme } from '../../context/ThemeContext';
 
 // Vertex shader: Full-screen quad
 const VS_SOURCE = `
@@ -133,16 +133,12 @@ function createProgram(
 export const WebGLShaderCanvas: React.FC<{ className?: string }> = ({ className = '' }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   
-  // Safe theme detection even if rendered outside ThemeProvider
-  let isNight = true;
-  try {
-    const themeCtx = useTheme();
-    isNight = themeCtx.isNight;
-  } catch {
-    isNight = typeof window !== 'undefined' && window.matchMedia
+  const themeCtx = useOptionalTheme();
+  const isNight = themeCtx
+    ? themeCtx.isNight
+    : typeof window !== 'undefined' && window.matchMedia
       ? !window.matchMedia('(prefers-color-scheme: light)').matches
       : true;
-  }
 
   const stateRef = useRef({
     isNight,

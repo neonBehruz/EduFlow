@@ -68,6 +68,17 @@ export const StudentsPage: React.FC = () => {
     }
   };
 
+  const loadApplications = () => {
+    try {
+      const raw = localStorage.getItem('eduflow_course_applications');
+      if (raw) {
+        setApplications(JSON.parse(raw));
+      }
+    } catch {
+      // ignore
+    }
+  };
+
   useEffect(() => {
     groupApi.getAll({ pageSize: 100 }).then((res) => setGroups(res.items));
     teacherApi.getAll({ pageSize: 100 }).then((res) => setTeachers(res.items));
@@ -81,15 +92,6 @@ export const StudentsPage: React.FC = () => {
       window.removeEventListener('eduflow_application_updated', handleStorageChange);
     };
   }, []);
-
-  const loadApplications = () => {
-    try {
-      const raw = localStorage.getItem('eduflow_course_applications');
-      if (raw) {
-        setApplications(JSON.parse(raw));
-      }
-    } catch (e) {}
-  };
 
   const openAssignModal = (student: Student, defaultTeacherId?: string, defaultGroupId?: string) => {
     setAssignStudent(student);

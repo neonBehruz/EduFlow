@@ -112,23 +112,6 @@ export const StudentPortalPage: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    loadStudentData();
-    loadApplications();
-    loadAvailableCourses();
-
-    const handleUpdate = () => {
-      loadApplications();
-      loadStudentData();
-    };
-    window.addEventListener('storage', handleUpdate);
-    window.addEventListener('eduflow_application_updated', handleUpdate);
-    return () => {
-      window.removeEventListener('storage', handleUpdate);
-      window.removeEventListener('eduflow_application_updated', handleUpdate);
-    };
-  }, []);
-
   const loadStudentData = async () => {
     try {
       setLoading(true);
@@ -153,6 +136,23 @@ export const StudentPortalPage: React.FC = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadStudentData();
+    loadApplications();
+    loadAvailableCourses();
+
+    const handleUpdate = () => {
+      loadApplications();
+      loadStudentData();
+    };
+    window.addEventListener('storage', handleUpdate);
+    window.addEventListener('eduflow_application_updated', handleUpdate);
+    return () => {
+      window.removeEventListener('storage', handleUpdate);
+      window.removeEventListener('eduflow_application_updated', handleUpdate);
+    };
+  }, []);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
