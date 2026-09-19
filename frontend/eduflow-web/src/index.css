@@ -1,0 +1,373 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --primary: #0050cb;
+    --primary-container: #0066ff;
+    --background: #f6f8fd;
+    --surface: #ffffff;
+    --surface-container-low: #eff3fa;
+    --on-background: #0f172a;
+    --on-surface-variant: #475569;
+    --secondary-container: #d0e1fb;
+    --outline-variant: #e2e8f0;
+    --ambient-glow: radial-gradient(at 15% 15%, rgba(254, 215, 170, 0.35) 0px, transparent 50%),
+                     radial-gradient(at 85% 10%, rgba(191, 219, 254, 0.4) 0px, transparent 55%),
+                     radial-gradient(at 50% 100%, rgba(224, 231, 255, 0.3) 0px, transparent 60%);
+  }
+
+  html.dark,
+  html[data-theme="night"] {
+    --primary: #38bdf8;
+    --primary-container: #60a5fa;
+    --background: #090d16;
+    --surface: #0f172a;
+    --surface-container-low: #151f32;
+    --on-background: #f1f5f9;
+    --on-surface-variant: #94a3b8;
+    --secondary-container: #1e293b;
+    --outline-variant: #1e293b;
+    --ambient-glow: radial-gradient(at 20% 15%, rgba(99, 102, 241, 0.18) 0px, transparent 55%),
+                     radial-gradient(at 80% 25%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
+                     radial-gradient(at 50% 85%, rgba(168, 85, 247, 0.12) 0px, transparent 60%);
+  }
+
+  * {
+    transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                color 0.25s ease,
+                box-shadow 0.3s ease;
+  }
+
+  body {
+    background-color: var(--background);
+    background-image: var(--ambient-glow);
+    background-attachment: fixed;
+    color: var(--on-background);
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+}
+
+/* ==========================================================================
+   INTERACTIVE THEME SWITCHER KEYFRAMES
+   ========================================================================== */
+@keyframes cloud-drift-1 {
+  0% { transform: translateX(12px); opacity: 0.6; }
+  50% { transform: translateX(-6px); opacity: 0.85; }
+  100% { transform: translateX(12px); opacity: 0.6; }
+}
+
+@keyframes cloud-drift-2 {
+  0% { transform: translateX(-8px); opacity: 0.5; }
+  50% { transform: translateX(10px); opacity: 0.75; }
+  100% { transform: translateX(-8px); opacity: 0.5; }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.25); }
+}
+
+@keyframes twinkle-delay {
+  0%, 100% { opacity: 0.8; transform: scale(1.1); }
+  50% { opacity: 0.1; transform: scale(0.6); }
+}
+
+@keyframes ping-expand {
+  0% {
+    transform: scale(0);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(45);
+    opacity: 0;
+  }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes aurora-pulse-1 {
+  0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.15; }
+  50% { transform: scale(1.15) translate(20px, 30px); opacity: 0.28; }
+}
+
+@keyframes aurora-pulse-2 {
+  0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.12; }
+  50% { transform: scale(1.2) translate(-30px, -20px); opacity: 0.24; }
+}
+
+@keyframes aurora-pulse-3 {
+  0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.1; }
+  50% { transform: scale(1.1) translate(15px, -25px); opacity: 0.2; }
+}
+
+@keyframes meteor {
+  0% { transform: rotate(-45deg) translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  25% { transform: rotate(-45deg) translateX(-350px); opacity: 0; }
+  100% { transform: rotate(-45deg) translateX(-350px); opacity: 0; }
+}
+
+@keyframes sun-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.25; }
+  50% { transform: translate(30px, 20px) scale(1.1); opacity: 0.35; }
+}
+
+@keyframes float-orb {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-30px) scale(1.15); }
+}
+
+.animate-aurora-pulse-1 {
+  animation: aurora-pulse-1 12s ease-in-out infinite;
+}
+
+.animate-aurora-pulse-2 {
+  animation: aurora-pulse-2 15s ease-in-out infinite;
+}
+
+.animate-aurora-pulse-3 {
+  animation: aurora-pulse-3 18s ease-in-out infinite;
+}
+
+.animate-meteor {
+  animation: meteor 9s cubic-bezier(0.2, 0.8, 0.2, 1) infinite 2s;
+}
+
+.animate-meteor-delay {
+  animation: meteor 13s cubic-bezier(0.2, 0.8, 0.2, 1) infinite 7s;
+}
+
+.animate-sun-drift {
+  animation: sun-drift 14s ease-in-out infinite;
+}
+
+.animate-cloud-drift-2 {
+  animation: cloud-drift-2 7s ease-in-out infinite;
+}
+
+.animate-twinkle {
+  animation: twinkle 2.5s ease-in-out infinite;
+}
+
+.animate-twinkle-delay {
+  animation: twinkle-delay 3.2s ease-in-out infinite 0.8s;
+}
+
+.animate-ping-expand {
+  animation: ping-expand 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 18s linear infinite;
+}
+
+/* ==========================================================================
+   CARD & CONTAINER DELIGHTFUL AESTHETICS (LIFT & GLOW)
+   ========================================================================== */
+/* Smooth float lift on hover for dashboard cards */
+.hover-lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* Morning theme card aesthetic */
+html[data-theme="morning"] .bg-white,
+html.light .bg-white {
+  box-shadow: 0 4px 20px -3px rgba(15, 23, 42, 0.05), 0 2px 6px -2px rgba(15, 23, 42, 0.02);
+  border-color: rgba(226, 232, 240, 0.8);
+}
+html[data-theme="morning"] .bg-white:hover,
+html.light .bg-white:hover {
+  box-shadow: 0 10px 25px -3px rgba(0, 80, 203, 0.08), 0 4px 8px -2px rgba(15, 23, 42, 0.03);
+}
+
+/* ==========================================================================
+   NIGHT / KECHKI TEMA (Midnight Eye-Care & AMOLED Soothing Palette)
+   ========================================================================== */
+html.dark body {
+  background-color: #090d16;
+  color: #f1f5f9;
+}
+
+/* Background containers in dark */
+html.dark .bg-\[\#faf8ff\],
+html.dark [class*="bg-[#faf8ff]"] {
+  background-color: transparent !important;
+}
+
+/* Sidebar & Header glassmorphism */
+html.dark aside.bg-white {
+  background-color: rgba(15, 23, 42, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(16px);
+}
+
+html.dark header.bg-white\/80 {
+  background-color: rgba(15, 23, 42, 0.75) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(16px);
+}
+
+/* Cards & Modals */
+html.dark .bg-white {
+  background-color: rgba(15, 23, 42, 0.9) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #f1f5f9;
+  box-shadow: 0 4px 25px -2px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+html.dark .bg-white:hover {
+  border-color: rgba(99, 102, 241, 0.3) !important;
+  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.7), 0 0 15px 1px rgba(99, 102, 241, 0.1);
+}
+
+/* Sub-panels & Inputs */
+html.dark .bg-slate-50,
+html.dark .bg-slate-50\/50,
+html.dark .bg-slate-100,
+html.dark .bg-slate-100\/70,
+html.dark .bg-slate-100\/80 {
+  background-color: #172033 !important;
+}
+
+html.dark .border-slate-100,
+html.dark .border-slate-200,
+html.dark .border-slate-200\/80 {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+html.dark .divide-slate-100 > * + *,
+html.dark .divide-slate-200 > * + * {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Eye-Friendly typography */
+html.dark .text-slate-900,
+html.dark .text-slate-800,
+html.dark .text-slate-700 {
+  color: #f1f5f9 !important;
+}
+
+html.dark .text-slate-600,
+html.dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+html.dark .text-slate-400 {
+  color: #64748b !important;
+}
+
+/* Dark mode form inputs with glowing focus */
+html.dark input:not([type="checkbox"]):not([type="radio"]),
+html.dark select,
+html.dark textarea {
+  background-color: #141c2e !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #f1f5f9 !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #64748b !important;
+}
+
+html.dark input:focus,
+html.dark select:focus,
+html.dark textarea:focus {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25) !important;
+}
+
+/* Hover effects */
+html.dark .hover\:bg-slate-50:hover,
+html.dark .hover\:bg-slate-100:hover {
+  background-color: #1e293b !important;
+}
+
+/* Tables in dark mode */
+html.dark table tbody tr {
+  border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+html.dark table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+html.dark table thead th {
+  background-color: #111827 !important;
+  color: #94a3b8 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Active navigation highlight in night mode */
+html.dark .bg-\[\#d0e1fb\]\/60 {
+  background-color: rgba(30, 58, 138, 0.5) !important;
+  color: #93c5fd !important;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.25);
+}
+
+/* Badges with glowing accents in dark mode */
+html.dark .bg-blue-50 {
+  background-color: rgba(30, 58, 138, 0.35) !important;
+  color: #93c5fd !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+html.dark .bg-emerald-50 {
+  background-color: rgba(6, 78, 59, 0.35) !important;
+  color: #6ee7b7 !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+html.dark .bg-amber-50 {
+  background-color: rgba(120, 53, 15, 0.35) !important;
+  color: #fcd34d !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+}
+
+html.dark .bg-rose-50,
+html.dark .bg-red-50 {
+  background-color: rgba(136, 19, 55, 0.35) !important;
+  color: #fda4af !important;
+  border-color: rgba(244, 63, 94, 0.3) !important;
+}
+
+/* Modals in dark mode */
+html.dark .shadow-xl,
+html.dark .shadow-2xl {
+  box-shadow: 0 25px 35px -5px rgba(0, 0, 0, 0.75), 0 10px 15px -6px rgba(0, 0, 0, 0.75) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}

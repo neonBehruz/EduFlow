@@ -1,0 +1,16 @@
+# Multi-stage Dockerfile for React + Vite Frontend
+FROM node:22-alpine AS build
+WORKDIR /app
+
+COPY frontend/eduflow-web/package*.json ./
+RUN npm ci
+
+COPY frontend/eduflow-web/ ./
+RUN npm run build
+
+# Nginx alpine to serve static assets
+FROM nginx:alpine AS runtime
+COPY --from=build /app/dist /usr/share/nginx/html
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

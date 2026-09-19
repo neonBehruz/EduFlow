@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/EduFlow.Application/EduFlow.Application.csproj" />
+    <Project Path="src/EduFlow.Domain/EduFlow.Domain.csproj" />
+    <Project Path="src/EduFlow.Infrastructure/EduFlow.Infrastructure.csproj" />
+    <Project Path="src/EduFlow.WebApi/EduFlow.WebApi.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/EduFlow.SecurityTests/EduFlow.SecurityTests.csproj" />
+  </Folder>
+</Solution>

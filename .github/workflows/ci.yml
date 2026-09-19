@@ -1,0 +1,55 @@
+name: EduFlow CI Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  backend-ci:
+    name: Backend Build & Test (.NET 10)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore Dependencies
+        run: dotnet restore src/EduFlow.WebApi/EduFlow.WebApi.csproj
+
+      - name: Build Solution
+        run: dotnet build src/EduFlow.WebApi/EduFlow.WebApi.csproj --configuration Release --no-restore
+
+      - name: Run Unit & Security Tests
+        run: dotnet test tests/EduFlow.SecurityTests/EduFlow.SecurityTests.csproj --configuration Release --no-build --verbosity normal
+
+  frontend-ci:
+    name: Frontend Build & Lint (React 19)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend/eduflow-web
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: frontend/eduflow-web/package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Lint Code
+        run: npm run lint
+
+      - name: TypeScript Check & Vite Build
+        run: npm run build

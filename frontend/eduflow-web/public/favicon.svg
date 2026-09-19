@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="eduflowBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0050cb" />
+      <stop offset="60%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+    <linearGradient id="gloss" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.05" />
+    </linearGradient>
+  </defs>
+
+  <!-- Modern Squircle Base -->
+  <rect x="3" y="3" width="58" height="58" rx="17" fill="url(#eduflowBg)" />
+  
+  <!-- Glassmorphic Inner Bevel -->
+  <rect x="4.5" y="4.5" width="55" height="55" rx="15.5" stroke="url(#gloss)" stroke-width="1.5" />
+
+  <!-- Bold EduFlow 'E' Emblem -->
+  <path d="M22 18h19c1.1 0 2 .9 2 2s-.9 2-2 2H26.5v7h12.5c1.1 0 2 .9 2 2s-.9 2-2 2H26.5v7H41c1.1 0 2 .9 2 2s-.9 2-2 2H22c-2.2 0-4-1.8-4-4V22c0-2.2 1.8-4 4-4z" fill="#ffffff" />
+
+  <!-- Electric Cyan Accent Sparkle / Node -->
+  <circle cx="45" cy="18" r="4" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5" />
+</svg>

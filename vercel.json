@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "installCommand": "cd frontend/eduflow-web && npm install",
+  "buildCommand": "cd frontend/eduflow-web && npm run build",
+  "outputDirectory": "frontend/eduflow-web/dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

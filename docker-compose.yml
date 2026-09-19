@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: eduflow-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-EduFlowDb}
+      POSTGRES_USER: ${POSTGRES_USER:-eduflow_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres_secure_default_pass}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - eduflow_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-eduflow_user} -d ${POSTGRES_DB:-EduFlowDb}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: eduflow-backend
+    restart: always
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=${POSTGRES_DB:-EduFlowDb};Username=${POSTGRES_USER:-eduflow_user};Password=${POSTGRES_PASSWORD:-postgres_secure_default_pass}"
+      Jwt__Secret: "${JWT_SECRET:-EduFlowDevOnlySecretKeyForLocalDevelopment2026!Min64CharactersLongKey12345}"
+      Jwt__Issuer: "EduFlowApi"
+      Jwt__Audience: "EduFlowClient"
+    ports:
+      - "5000:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: eduflow-frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  eduflow_pgdata:

@@ -1,0 +1,28 @@
+# Multi-stage Dockerfile for EduFlow .NET 10 WebAPI
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+WORKDIR /app
+
+# Copy solution and project files
+COPY EduFlow.slnx ./
+COPY src/EduFlow.Domain/EduFlow.Domain.csproj src/EduFlow.Domain/
+COPY src/EduFlow.Application/EduFlow.Application.csproj src/EduFlow.Application/
+COPY src/EduFlow.Infrastructure/EduFlow.Infrastructure.csproj src/EduFlow.Infrastructure/
+COPY src/EduFlow.WebApi/EduFlow.WebApi.csproj src/EduFlow.WebApi/
+COPY tests/EduFlow.SecurityTests/EduFlow.SecurityTests.csproj tests/EduFlow.SecurityTests/
+
+RUN dotnet restore src/EduFlow.WebApi/EduFlow.WebApi.csproj
+
+# Copy source code and build
+COPY src/ src/
+RUN dotnet publish src/EduFlow.WebApi/EduFlow.WebApi.csproj -c Release -o /app/publish /p:UseAppHost=false
+
+# Runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/publish .
+
+EXPOSE 5000
+ENV ASPNETCORE_URLS=http://+:5000
+ENV ASPNETCORE_ENVIRONMENT=Production
+
+ENTRYPOINT ["dotnet", "EduFlow.WebApi.dll"]
