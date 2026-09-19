@@ -22,9 +22,11 @@ export const SuperAdminPage: React.FC = () => {
         superAdminApi.getOrganizations(),
         settingsApi.getPlans(),
       ]);
-      if (sRes.success) setStats(sRes.data);
-      setOrganizations(orgsRes);
-      setPlans(plansRes);
+      if (sRes?.success) setStats(sRes.data);
+      const safeOrgs = Array.isArray(orgsRes) ? orgsRes : (orgsRes as any)?.data || [];
+      const safePlans = Array.isArray(plansRes) ? plansRes : (plansRes as any)?.data || [];
+      setOrganizations(Array.isArray(safeOrgs) ? safeOrgs : []);
+      setPlans(Array.isArray(safePlans) ? safePlans : []);
     } catch (err) {
       console.error('SuperAdmin fetch error', err);
     } finally {
@@ -101,7 +103,7 @@ export const SuperAdminPage: React.FC = () => {
       {/* Organizations Table */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
         <div className="p-4 bg-slate-50/50 border-b border-slate-100 font-bold text-xs text-slate-700">
-          Mijoz O'quv Markazlari Ro'yxati ({organizations.length})
+          Mijoz O'quv Markazlari Ro'yxati ({(organizations || []).length})
         </div>
 
         <div className="overflow-x-auto">
@@ -117,7 +119,7 @@ export const SuperAdminPage: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {organizations.map((o) => (
+              {(organizations || []).map((o) => (
                 <tr key={o.id} className="hover:bg-slate-50/50">
                   <td className="py-3.5 px-6 font-bold text-slate-800">{o.name}</td>
                   <td className="py-3.5 px-6">
@@ -177,7 +179,7 @@ export const SuperAdminPage: React.FC = () => {
               onChange={(e) => setSelectedPlanId(e.target.value)}
               className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-800 dark:text-white"
             >
-              {plans.map((p) => (
+              {(plans || []).map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.name} — {p.monthlyPrice.toLocaleString()} UZS/oy
                 </option>

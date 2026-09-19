@@ -178,23 +178,23 @@ export const RiskAnalysisPage: React.FC = () => {
                   <div>
                     <span className="text-[10px] text-slate-400 block">Davomat darajasi</span>
                     <span className="font-extrabold text-slate-800 dark:text-white">
-                      {risk.attendanceRate}%
+                      {risk.attendanceRate ?? 0}%
                     </span>
                   </div>
                   <div>
                     <span className="text-[10px] text-slate-400 block">O'rtacha baho</span>
                     <span className="font-extrabold text-slate-800 dark:text-white">
-                      {risk.averageGrade} / 100
+                      {risk.averageGrade ?? 0} / 100
                     </span>
                   </div>
                   <div>
                     <span className="text-[10px] text-slate-400 block">Sababsiz qoldirish</span>
-                    <span className="font-extrabold text-rose-600">{risk.unexcusedAbsences} ta dars</span>
+                    <span className="font-extrabold text-rose-600">{risk.unexcusedAbsences ?? 0} ta dars</span>
                   </div>
                   <div>
                     <span className="text-[10px] text-slate-400 block">Qarzdorlik</span>
                     <span className="font-extrabold text-slate-800 dark:text-white">
-                      {risk.overduePaymentDays > 0 ? `${risk.overduePaymentDays} kun kechikkan` : "Yo'q"}
+                      {(risk.overduePaymentDays ?? 0) > 0 ? `${risk.overduePaymentDays} kun kechikkan` : "Yo'q"}
                     </span>
                   </div>
                 </div>
@@ -204,7 +204,7 @@ export const RiskAnalysisPage: React.FC = () => {
                   <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 block">
                     Aniqlangan sabablar:
                   </span>
-                  {risk.riskReasons.map((reason, idx) => (
+                  {(risk.riskReasons || []).map((reason, idx) => (
                     <p
                       key={idx}
                       className="text-[11px] text-rose-700 dark:text-rose-400 flex items-center gap-1.5"
@@ -214,6 +214,7 @@ export const RiskAnalysisPage: React.FC = () => {
                     </p>
                   ))}
                 </div>
+
               </div>
 
               {/* Action Buttons */}

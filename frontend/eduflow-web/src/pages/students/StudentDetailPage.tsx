@@ -123,6 +123,11 @@ export const StudentDetailPage: React.FC = () => {
   if (loading) return <LoadingSpinner text="O'quvchi ma'lumotlari yuklanmoqda..." />;
   if (!student) return <EmptyState title="O'quvchi topilmadi" description="Bunday ID ga ega o'quvchi mavjud emas." />;
 
+  const studentGroups = student.groups || [];
+  const studentAttendances = student.recentAttendances || [];
+  const studentGrades = student.recentGrades || [];
+  const studentPayments = student.recentPayments || [];
+
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Top Bar: Back button & Quick Action */}
@@ -220,9 +225,9 @@ export const StudentDetailPage: React.FC = () => {
       <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-1 overflow-x-auto">
         {[
           { id: 'overview', label: 'Umumiy Ma’lumot', icon: User },
-          { id: 'attendance', label: 'Davomat Tarixi', icon: ClipboardCheck, count: student.recentAttendances?.length },
-          { id: 'grades', label: 'Baholar', icon: Award, count: student.recentGrades?.length },
-          { id: 'payments', label: 'To‘lovlar', icon: CreditCard, count: student.recentPayments?.length },
+          { id: 'attendance', label: 'Davomat Tarixi', icon: ClipboardCheck, count: studentAttendances.length },
+          { id: 'grades', label: 'Baholar', icon: Award, count: studentGrades.length },
+          { id: 'payments', label: 'To‘lovlar', icon: CreditCard, count: studentPayments.length },
         ].map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -379,7 +384,7 @@ export const StudentDetailPage: React.FC = () => {
                     <div className="w-7 h-7 rounded-xl bg-blue-100 dark:bg-blue-950/60 text-[#0050cb] flex items-center justify-center">
                       <GraduationCap className="w-4 h-4" />
                     </div>
-                    <span>A'zo bo‘lgan Guruhlari ({student.groups.length})</span>
+                    <span>A'zo bo‘lgan Guruhlari ({studentGroups.length})</span>
                   </h3>
                   <button
                     type="button"
@@ -391,9 +396,9 @@ export const StudentDetailPage: React.FC = () => {
                   </button>
                 </div>
 
-                {student.groups.length > 0 ? (
+                {studentGroups.length > 0 ? (
                   <div className="space-y-3">
-                    {student.groups.map((g) => (
+                    {studentGroups.map((g) => (
                       <div
                         key={g.id}
                         className="p-4 bg-slate-50/80 dark:bg-slate-800/60 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-blue-300 dark:hover:border-blue-700 transition-all"
@@ -458,13 +463,13 @@ export const StudentDetailPage: React.FC = () => {
               <ClipboardCheck className="w-4 h-4 text-[#0050cb]" />
               <span>Oxirgi davomat qaydlari</span>
             </h3>
-            {student.recentAttendances.length === 0 ? (
+            {studentAttendances.length === 0 ? (
               <div className="p-10 text-center text-xs text-slate-400 bg-slate-50 dark:bg-slate-800/40 rounded-2xl">
                 Hozircha davomat qaydlari mavjud emas.
               </div>
             ) : (
               <div className="space-y-2.5">
-                {student.recentAttendances.map((att) => (
+                {studentAttendances.map((att) => (
                   <div
                     key={att.id}
                     className="p-4 bg-slate-50/80 dark:bg-slate-800/60 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between text-xs hover:border-slate-300 dark:hover:border-slate-600 transition-all"
@@ -495,13 +500,13 @@ export const StudentDetailPage: React.FC = () => {
               <Award className="w-4 h-4 text-amber-500" />
               <span>Oxirgi baholar</span>
             </h3>
-            {student.recentGrades.length === 0 ? (
+            {studentGrades.length === 0 ? (
               <div className="p-10 text-center text-xs text-slate-400 bg-slate-50 dark:bg-slate-800/40 rounded-2xl">
                 Hozircha baholar qo'yilmagan.
               </div>
             ) : (
               <div className="space-y-2.5">
-                {student.recentGrades.map((gr) => (
+                {studentGrades.map((gr) => (
                   <div
                     key={gr.id}
                     className="p-4 bg-slate-50/80 dark:bg-slate-800/60 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between text-xs"
@@ -529,13 +534,13 @@ export const StudentDetailPage: React.FC = () => {
               <CreditCard className="w-4 h-4 text-purple-600" />
               <span>To‘lovlar tarixi</span>
             </h3>
-            {student.recentPayments.length === 0 ? (
+            {studentPayments.length === 0 ? (
               <div className="p-10 text-center text-xs text-slate-400 bg-slate-50 dark:bg-slate-800/40 rounded-2xl">
                 Hozircha to'lov qaydlari mavjud emas.
               </div>
             ) : (
               <div className="space-y-2.5">
-                {student.recentPayments.map((pm) => (
+                {studentPayments.map((pm) => (
                   <div
                     key={pm.id}
                     className="p-4 bg-slate-50/80 dark:bg-slate-800/60 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between text-xs"

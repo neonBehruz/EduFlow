@@ -103,7 +103,7 @@ export const ReportsPage: React.FC = () => {
           <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
             <h3 className="text-base font-bold text-slate-800">Guruhlar bo'yicha davomat</h3>
             <div className="space-y-3">
-              {attReport.groupSummaries.map((g) => (
+              {(attReport.groupSummaries || []).map((g) => (
                 <div key={g.groupId} className="p-3 bg-slate-50 rounded-xl flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-800">{g.groupName}</span>
                   <div className="flex items-center gap-4">
@@ -125,25 +125,25 @@ export const ReportsPage: React.FC = () => {
             <div className="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-5">
               <span className="text-xs font-bold text-emerald-800 uppercase">To'langan Tushum</span>
               <div className="text-2xl sm:text-3xl font-black text-emerald-900 mt-2">
-                {payReport.totalPaid.toLocaleString()} UZS
+                {(payReport.totalPaid ?? 0).toLocaleString()} UZS
               </div>
-              <span className="text-[11px] text-emerald-700 mt-1 block">{payReport.paidTransactionsCount} ta to'lov</span>
+              <span className="text-[11px] text-emerald-700 mt-1 block">{payReport.paidTransactionsCount ?? 0} ta to'lov</span>
             </div>
 
             <div className="bg-amber-50/70 border border-amber-200 rounded-2xl p-5">
               <span className="text-xs font-bold text-amber-800 uppercase">Kutilayotgan Summa</span>
               <div className="text-2xl sm:text-3xl font-black text-amber-900 mt-2">
-                {payReport.totalPending.toLocaleString()} UZS
+                {(payReport.totalPending ?? 0).toLocaleString()} UZS
               </div>
-              <span className="text-[11px] text-amber-700 mt-1 block">{payReport.pendingTransactionsCount} ta to'lov</span>
+              <span className="text-[11px] text-amber-700 mt-1 block">{payReport.pendingTransactionsCount ?? 0} ta to'lov</span>
             </div>
 
             <div className="bg-rose-50/70 border border-rose-200 rounded-2xl p-5">
               <span className="text-xs font-bold text-rose-800 uppercase">Qarzdorlik</span>
               <div className="text-2xl sm:text-3xl font-black text-rose-900 mt-2">
-                {payReport.totalOverdue.toLocaleString()} UZS
+                {(payReport.totalOverdue ?? 0).toLocaleString()} UZS
               </div>
-              <span className="text-[11px] text-rose-700 mt-1 block">{payReport.overdueTransactionsCount} ta muddati o'tgan</span>
+              <span className="text-[11px] text-rose-700 mt-1 block">{payReport.overdueTransactionsCount ?? 0} ta muddati o'tgan</span>
             </div>
           </div>
 
@@ -151,8 +151,8 @@ export const ReportsPage: React.FC = () => {
           <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
             <h3 className="text-base font-bold text-slate-800">Oylik daromad dinamikasi</h3>
             <div className="grid grid-cols-6 gap-2 pt-6 items-end h-48 border-b border-slate-100">
-              {payReport.monthlyTrend.map((m, idx) => {
-                const max = Math.max(...payReport.monthlyTrend.map((x) => x.amount), 1);
+              {(payReport.monthlyTrend || []).map((m, idx) => {
+                const max = Math.max(...(payReport.monthlyTrend || []).map((x) => x.amount), 1);
                 const pct = Math.round((m.amount / max) * 100);
                 return (
                   <div key={idx} className="flex flex-col items-center gap-2 h-full justify-end group">
@@ -177,23 +177,24 @@ export const ReportsPage: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
             <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
               <span className="text-xs font-semibold text-slate-500 uppercase">Jami O'quvchilar</span>
-              <div className="text-3xl font-black text-slate-800 mt-1">{stReport.totalStudents}</div>
+              <div className="text-3xl font-black text-slate-800 mt-1">{stReport.totalStudents ?? 0}</div>
             </div>
             <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
               <span className="text-xs font-semibold text-slate-500 uppercase">Faol</span>
-              <div className="text-3xl font-black text-emerald-600 mt-1">{stReport.activeStudents}</div>
+              <div className="text-3xl font-black text-emerald-600 mt-1">{stReport.activeStudents ?? 0}</div>
             </div>
             <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
               <span className="text-xs font-semibold text-slate-500 uppercase">O'rtacha Ball</span>
-              <div className="text-3xl font-black text-[#0050cb] mt-1">{stReport.averageOverallGrade}</div>
+              <div className="text-3xl font-black text-[#0050cb] mt-1">{stReport.averageOverallGrade ?? 0}</div>
             </div>
             <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
               <span className="text-xs font-semibold text-slate-500 uppercase">O'rtacha Davomat</span>
-              <div className="text-3xl font-black text-purple-600 mt-1">{stReport.averageOverallAttendance}%</div>
+              <div className="text-3xl font-black text-purple-600 mt-1">{stReport.averageOverallAttendance ?? 0}%</div>
             </div>
           </div>
         </div>
       )}
+
     </div>
   );
 };

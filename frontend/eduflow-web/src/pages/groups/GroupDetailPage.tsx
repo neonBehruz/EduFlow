@@ -139,15 +139,18 @@ export const GroupDetailPage: React.FC = () => {
   if (loading) return <LoadingSpinner text="Guruh ma'lumotlari yuklanmoqda..." />;
   if (!group) return <EmptyState title="Guruh topilmadi" description="Bunday guruh mavjud emas yoki o'chirilgan." />;
 
+  const groupStudents = group.students || [];
+  const groupLessons = group.recentLessons || [];
+
   // Filter students
-  const filteredStudents = group.students.filter(
+  const filteredStudents = groupStudents.filter(
     (st) =>
-      st.fullName.toLowerCase().includes(studentSearch.toLowerCase()) ||
-      st.phoneNumber.includes(studentSearch)
+      (st.fullName || '').toLowerCase().includes(studentSearch.toLowerCase()) ||
+      (st.phoneNumber || '').includes(studentSearch)
   );
 
   // Filter lessons
-  const filteredLessons = group.recentLessons.filter((l) => {
+  const filteredLessons = groupLessons.filter((l) => {
     if (lessonFilter === 'pending') return l.status === 1;
     if (lessonFilter === 'completed') return l.status === 2;
     return true;
@@ -155,12 +158,13 @@ export const GroupDetailPage: React.FC = () => {
 
   // Calculate average attendance
   const avgAttendance =
-    group.students.length > 0
+    groupStudents.length > 0
       ? Math.round(
-          group.students.reduce((sum, s) => sum + (s.attendancePercentage ?? 100), 0) /
-            group.students.length
+          groupStudents.reduce((sum, s) => sum + (s.attendancePercentage ?? 100), 0) /
+            groupStudents.length
         )
       : 100;
+
 
   const backUrl = user?.role === 3 ? `${langPrefix}/teacher/groups` : `${langPrefix}/groups`;
 

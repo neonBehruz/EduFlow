@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { DashboardLayout, AuthLayout, ProtectedRoleRoute } from './layouts/Layouts';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
 
 
 // Clean up demo course applications from localStorage if present
@@ -99,29 +100,18 @@ const RoleAttendanceDetailRedirect: React.FC = () => {
 };
 
 const RoleRoomsRedirect: React.FC = () => {
-  const { language } = useLanguage();
-  const lang = language.toLowerCase();
-  return <Navigate to={`/${lang}/dashboard`} replace />;
+  return <RoomsPage />;
 };
 
 const RoleCertificatesRedirect: React.FC = () => {
-  const { language } = useLanguage();
-  const lang = language.toLowerCase();
-  return <Navigate to={`/${lang}/dashboard`} replace />;
+  return <CertificatesPage />;
 };
 
 const RoleBranchesRedirect: React.FC = () => {
-  const { language } = useLanguage();
-  const lang = language.toLowerCase();
-  return <Navigate to={`/${lang}/dashboard`} replace />;
+  return <BranchesPage />;
 };
 
 const RoleGradesRedirect: React.FC = () => {
-  const { user } = useAuth();
-  const { language } = useLanguage();
-  const lang = language.toLowerCase();
-  if (user?.role === 3) return <Navigate to={`/${lang}/teacher/dashboard`} replace />;
-  if (user?.role && user.role <= 2) return <Navigate to={`/${lang}/dashboard`} replace />;
   return <GradesPage />;
 };
 
@@ -131,9 +121,9 @@ const RoleHomeworkRedirect: React.FC = () => {
   const lang = language.toLowerCase();
   if (user?.role === 3) return <Navigate to={`/${lang}/teacher/homework`} replace />;
   if (user?.role === 5) return <Navigate to={`/${lang}/student/homework`} replace />;
-  if (user?.role && user.role <= 2) return <Navigate to={`/${lang}/dashboard`} replace />;
   return <HomeworkPage />;
 };
+
 
 const RoleGroupsRedirect: React.FC = () => {
   const { user } = useAuth();
@@ -257,7 +247,8 @@ export const App: React.FC = () => {
         <ThemeProvider>
           {showEntrance && <AnimatedEntrance onComplete={handleEntranceComplete} />}
           <AuthProvider>
-            <Routes>
+            <ErrorBoundary>
+              <Routes>
               {/* Public Certificate Verification (No auth required) */}
               <Route path="/verify/:code" element={<CertificateVerifyPage />} />
               <Route path="/:lang/verify/:code" element={<CertificateVerifyPage />} />
@@ -347,7 +338,7 @@ export const App: React.FC = () => {
                 <Route
                   path="/:lang/admin"
                   element={
-                    <ProtectedRoleRoute allowedRoles={[1]}>
+                    <ProtectedRoleRoute allowedRoles={[1, 2]}>
                       <SuperAdminPage />
                     </ProtectedRoleRoute>
                   }
@@ -357,7 +348,8 @@ export const App: React.FC = () => {
               {/* Catch-all and non-prefixed redirector */}
               <Route path="*" element={<UniversalRedirector />} />
             </Routes>
-          </AuthProvider>
+          </ErrorBoundary>
+        </AuthProvider>
         </ThemeProvider>
       </LanguageProvider>
     </BrowserRouter>
