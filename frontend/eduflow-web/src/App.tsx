@@ -59,6 +59,7 @@ const RoleDashboardRedirect: React.FC = () => {
   const { user } = useAuth();
   const { language } = useLanguage();
   const lang = language.toLowerCase();
+  if (user?.role === 1) return <Navigate to={`/${lang}/admin`} replace />;
   if (user?.role === 3) return <Navigate to={`/${lang}/teacher/dashboard`} replace />;
   if (user?.role === 4) return <Navigate to={`/${lang}/parent/dashboard`} replace />;
   if (user?.role === 5) return <Navigate to={`/${lang}/student/dashboard`} replace />;
@@ -79,7 +80,7 @@ const RoleCalendarRedirect: React.FC = () => {
   const lang = language.toLowerCase();
   if (user?.role === 3) return <Navigate to={`/${lang}/teacher/lessons`} replace />;
   if (user?.role === 5) return <Navigate to={`/${lang}/student/calendar`} replace />;
-  return <CalendarPage />;
+  return <Navigate to={`/${lang}/lessons`} replace />;
 };
 
 const RoleAttendanceRedirect: React.FC = () => {
@@ -221,6 +222,11 @@ const UniversalRedirector: React.FC = () => {
     return <Navigate to={`/${lang}/student/dashboard`} replace />;
   }
 
+  // SuperAdmin un-prefixed redirect
+  if (user?.role === 1) {
+    return <Navigate to={`/${lang}/admin`} replace />;
+  }
+
   // Admin or unauthenticated
   if (pathname === '/' || pathname === '') {
     return <Navigate to={`/${lang}/dashboard`} replace />;
@@ -304,6 +310,7 @@ export const App: React.FC = () => {
                 <Route path="/:lang/students/:id" element={<StudentDetailPage />} />
                 <Route path="/:lang/teachers" element={<TeachersPage />} />
                 <Route path="/:lang/groups" element={<RoleGroupsRedirect />} />
+                <Route path="/:lang/groups/:id" element={<RoleGroupDetailRedirect />} />
                 <Route
                   path="/:lang/users"
                   element={
@@ -334,11 +341,19 @@ export const App: React.FC = () => {
                 <Route path="/:lang/feedback" element={<FeedbackPage />} />
                 <Route path="/:lang/children" element={<MyChildrenPage />} />
 
-                {/* SuperAdmin */}
+                {/* SuperAdmin Only */}
                 <Route
                   path="/:lang/admin"
                   element={
-                    <ProtectedRoleRoute allowedRoles={[1, 2]}>
+                    <ProtectedRoleRoute allowedRoles={[1]}>
+                      <SuperAdminPage />
+                    </ProtectedRoleRoute>
+                  }
+                />
+                <Route
+                  path="/:lang/admin/:tab"
+                  element={
+                    <ProtectedRoleRoute allowedRoles={[1]}>
                       <SuperAdminPage />
                     </ProtectedRoleRoute>
                   }

@@ -51,6 +51,8 @@ public class Teacher : AuditableEntity, ITenantEntity
     public string PhoneNumber { get; set; } = string.Empty;
     public string? Specialization { get; set; }
     public decimal? CustomSharePercentage { get; set; }
+    public PayrollType SalaryModel { get; set; } = PayrollType.Percentage;
+    public decimal? FixedSalaryAmount { get; set; }
 
     // Navigation
     public Organization Organization { get; set; } = null!;
@@ -85,6 +87,10 @@ public class Student : AuditableEntity, ITenantEntity
     public DateTime EnrollmentDate { get; set; } = DateTime.UtcNow;
     public Guid? ParentId { get; set; }
     public bool IsActive { get; set; } = true;
+    public bool IsPaymentBlocked { get; set; } = false;
+    public DateTime? PaidUntil { get; set; }
+    public string? PaymentBlockReason { get; set; }
+    public DateTime? LastPaymentDate { get; set; }
 
     // Navigation
     public Organization Organization { get; set; } = null!;

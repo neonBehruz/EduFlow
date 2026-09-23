@@ -19,6 +19,7 @@ export const StudentsPage: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
   const [selectedGroup, setSelectedGroup] = useState<string>('');
+  const [filterBlocked, setFilterBlocked] = useState<string>('all');
   const [loading, setLoading] = useState(true);
 
   // Modals state
@@ -55,6 +56,7 @@ export const StudentsPage: React.FC = () => {
       const res = await studentApi.getAll({
         search: search || undefined,
         groupId: selectedGroup || undefined,
+        isBlocked: filterBlocked === 'blocked' ? true : filterBlocked === 'active' ? false : undefined,
         page,
         pageSize: 10,
       });
@@ -158,7 +160,35 @@ export const StudentsPage: React.FC = () => {
 
   useEffect(() => {
     fetchStudents();
-  }, [page, selectedGroup]);
+  }, [page, selectedGroup, filterBlocked]);
+
+  const handleToggleBlock = async (st: Student) => {
+    const willBlock = !st.isPaymentBlocked;
+    const confirmText = willBlock
+      ? `"${st.fullName}" ni to'lov muddati o'tganligi uchun darsdan bloklamoqchimisiz?`
+      : `"${st.fullName}" ni blokdan chiqarib, darslarga qatnashishiga ruxsat bermoqchimisiz?`;
+    if (!window.confirm(confirmText)) return;
+
+    try {
+      await studentApi.toggleBlock(st.id, {
+        isBlocked: willBlock,
+        reason: willBlock ? "Oylik to'lov muddati o'tgan (darsga kiritilmasin)" : undefined,
+      });
+      setToastMessage({
+        type: 'success',
+        text: willBlock
+          ? `${st.fullName} muvaffaqiyatli bloklandi (Darsga kiritilmaydi).`
+          : `${st.fullName} blokdan chiqarildi (Darsga ruxsat etildi).`,
+      });
+      fetchStudents();
+    } catch (err) {
+      console.error('Toggle block error', err);
+      setToastMessage({
+        type: 'error',
+        text: "O'quvchi holatini o'zgartirishda xatolik yuz berdi.",
+      });
+    }
+  };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -409,8 +439,8 @@ export const StudentsPage: React.FC = () => {
           />
         </form>
 
-        <div className="flex items-center gap-3 w-full md:w-auto">
-          <div className="relative flex-1 md:w-56">
+        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 w-full md:w-auto">
+          <div className="relative w-full sm:w-52 md:w-56">
             <select
               value={selectedGroup}
               onChange={(e) => setSelectedGroup(e.target.value)}
@@ -422,6 +452,21 @@ export const StudentsPage: React.FC = () => {
                   {g.name}
                 </option>
               ))}
+            </select>
+          </div>
+
+          <div className="relative w-full sm:w-52 md:w-56">
+            <select
+              value={filterBlocked}
+              onChange={(e) => {
+                setFilterBlocked(e.target.value);
+                setPage(1);
+              }}
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-xs font-semibold text-slate-800 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0050cb]/20 focus:border-[#0050cb]"
+            >
+              <option value="all">{t('students.filter_all', 'Barcha o‘quvchilar')}</option>
+              <option value="blocked">{t('students.filter_blocked', '🚫 Faqat bloklanganlar (To‘lov muddati o‘tgan)')}</option>
+              <option value="active">{t('students.filter_active', '✅ Faqat faollar (Ruxsat etilganlar)')}</option>
             </select>
           </div>
         </div>
@@ -443,23 +488,23 @@ export const StudentsPage: React.FC = () => {
             />
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto scroll-touch">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/50 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                  <th className="py-3.5 px-6">{t('table.student', "O'quvchi")}</th>
-                  <th className="py-3.5 px-6">{t('table.group', 'Guruhlar')}</th>
-                  <th className="py-3.5 px-6">{t('table.parent', 'Ota-ona')}</th>
-                  <th className="py-3.5 px-6 text-center">{t('table.attendance', 'Davomat')}</th>
-                  <th className="py-3.5 px-6 text-center">{t('dash.average_grade', "O'rtacha Baho")}</th>
-                  <th className="py-3.5 px-6 text-center">{t('table.status', "To'lov Holati")}</th>
-                  <th className="py-3.5 px-6 text-right">{t('table.actions', 'Amallar')}</th>
+                <tr className="border-b border-slate-100 bg-slate-50/50 text-[11px] 3xl:text-xs font-bold text-slate-500 uppercase tracking-wider">
+                  <th className="py-3.5 px-4 sm:px-6">{t('table.student', "O'quvchi")}</th>
+                  <th className="py-3.5 px-4 sm:px-6">{t('table.group', 'Guruhlar')}</th>
+                  <th className="py-3.5 px-4 sm:px-6 hidden md:table-cell">{t('table.parent', 'Ota-ona')}</th>
+                  <th className="py-3.5 px-4 sm:px-6 text-center">{t('table.attendance', 'Davomat')}</th>
+                  <th className="py-3.5 px-4 sm:px-6 text-center hidden sm:table-cell">{t('dash.average_grade', "O'rtacha Baho")}</th>
+                  <th className="py-3.5 px-4 sm:px-6 text-center">{t('table.status', "To'lov Holati")}</th>
+                  <th className="py-3.5 px-4 sm:px-6 text-right">{t('table.actions', 'Amallar')}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-xs">
+              <tbody className="divide-y divide-slate-100 text-xs 3xl:text-sm">
                 {students.map((st) => (
                   <tr key={st.id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="py-4 px-6">
+                    <td className="py-4 px-4 sm:px-6">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-full bg-[#0050cb]/10 text-[#0050cb] flex items-center justify-center font-bold text-xs shrink-0">
                           {st.firstName[0]}
@@ -478,7 +523,7 @@ export const StudentsPage: React.FC = () => {
                       </div>
                     </td>
 
-                    <td className="py-4 px-6">
+                    <td className="py-4 px-4 sm:px-6">
                       {st.groupNames.length > 0 ? (
                         <div className="flex flex-wrap items-center gap-1.5">
                           {st.groupNames.map((g, idx) => (
@@ -505,7 +550,7 @@ export const StudentsPage: React.FC = () => {
                       )}
                     </td>
 
-                    <td className="py-4 px-6">
+                    <td className="py-4 px-4 sm:px-6 hidden md:table-cell">
                       {st.parentName ? (
                         <div>
                           <span className="font-semibold text-slate-700 block">{st.parentName}</span>
@@ -516,17 +561,33 @@ export const StudentsPage: React.FC = () => {
                       )}
                     </td>
 
-                    <td className="py-4 px-6 text-center">
-                      <span className="font-bold text-slate-800">{st.attendancePercentage}%</span>
+                    <td className="py-4 px-4 sm:px-6 text-center">
+                      <span className="font-bold text-slate-800 dark:text-slate-200">{st.attendancePercentage}%</span>
                     </td>
 
-                    <td className="py-4 px-6 text-center">
-                      <span className="font-bold text-slate-800">{st.averageGrade > 0 ? st.averageGrade : '—'}</span>
+                    <td className="py-4 px-4 sm:px-6 text-center hidden sm:table-cell">
+                      <span className="font-bold text-slate-800 dark:text-slate-200">{st.averageGrade > 0 ? st.averageGrade : '—'}</span>
                     </td>
 
-                    <td className="py-4 px-6 text-center">
-                      {st.currentPaymentStatus === 2 ? (
-                        <Badge variant="success">{t('status.paid', "To'langan")}</Badge>
+                    <td className="py-4 px-4 sm:px-6 text-center">
+                      {st.isPaymentBlocked ? (
+                        <div className="inline-flex flex-col items-center">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-200 dark:bg-rose-950/70 dark:text-rose-300 dark:border-rose-800 shadow-2xs">
+                            🚫 {t('students.payment_blocked', 'Darsga kiritilmaydi')}
+                          </span>
+                          <span className="text-[10px] text-rose-600 dark:text-rose-400 font-medium mt-0.5">
+                            {st.paidUntil ? `${new Date(st.paidUntil).toLocaleDateString()} ${t('students.paid_until', 'gacha edi')}` : (language === 'RU' ? 'Срок оплаты истек' : language === 'EN' ? 'Tuition expired' : "To'lov muddati o'tgan")}
+                          </span>
+                        </div>
+                      ) : st.currentPaymentStatus === 2 ? (
+                        <div className="inline-flex flex-col items-center">
+                          <Badge variant="success">{t('status.paid', "To'langan")}</Badge>
+                          {st.paidUntil && (
+                            <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium mt-0.5">
+                              {new Date(st.paidUntil).toLocaleDateString()} {t('students.paid_until', 'gacha')}
+                            </span>
+                          )}
+                        </div>
                       ) : st.currentPaymentStatus === 3 ? (
                         <Badge variant="danger">{t('status.overdue', 'Qarzdor')}</Badge>
                       ) : (
@@ -534,11 +595,22 @@ export const StudentsPage: React.FC = () => {
                       )}
                     </td>
 
-                    <td className="py-4 px-6 text-right">
+                    <td className="py-4 px-4 sm:px-6 text-right">
                       <div className="flex items-center justify-end gap-1.5">
                         <button
+                          onClick={() => handleToggleBlock(st)}
+                          title={st.isPaymentBlocked ? t('students.unblock_student', "Blokdan chiqarish (Darsga ruxsat)") : t('students.block_student', "Bloklash (Darsga kiritmaslik)")}
+                          className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                            st.isPaymentBlocked
+                              ? 'text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/50'
+                              : 'text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50'
+                          }`}
+                        >
+                          <span className="text-xs font-bold">{st.isPaymentBlocked ? '🔓' : '🚫'}</span>
+                        </button>
+                        <button
                           onClick={() => openAssignModal(st)}
-                          title="Guruh va O‘qituvchiga bog‘lash"
+                          title={language === 'RU' ? 'Прикрепить к группе и учителю' : language === 'EN' ? 'Assign to Group & Teacher' : "Guruh va O‘qituvchiga bog‘lash"}
                           className="p-1.5 text-[#0050cb] hover:text-white hover:bg-[#0050cb] rounded-lg transition-colors cursor-pointer"
                         >
                           <GraduationCap className="w-4 h-4" />

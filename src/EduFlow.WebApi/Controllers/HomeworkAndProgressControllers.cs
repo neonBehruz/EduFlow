@@ -28,6 +28,13 @@ public class HomeworkController : BaseApiController
         return Ok(result);
     }
 
+    [HttpGet("group/{groupId:guid}")]
+    public async Task<ActionResult<ApiResponse<List<HomeworkDto>>>> GetHomeworksByGroup(Guid groupId)
+    {
+        var result = await _homeworkService.GetHomeworksAsync(groupId, 1, 100);
+        return Ok(ApiResponse<List<HomeworkDto>>.Ok(result.Items.ToList()));
+    }
+
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<ApiResponse<HomeworkDto>>> GetHomeworkById(Guid id)
     {
@@ -89,6 +96,7 @@ public class StudentProgressController : BaseApiController
     }
 
     [HttpGet("{studentId:guid}")]
+    [HttpGet("student/{studentId:guid}")]
     public async Task<ActionResult<ApiResponse<StudentProgressDto>>> GetProgress(Guid studentId)
     {
         var result = await _progressService.GetProgressAsync(studentId);

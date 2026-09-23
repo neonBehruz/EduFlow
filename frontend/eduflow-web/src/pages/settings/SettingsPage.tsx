@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { settingsApi, telegramApi, financeApi, authApi } from '../../services/api';
 import { Organization, Subscription, SubscriptionPlan, FinanceSetting } from '../../types';
-import { LoadingSpinner, Badge, Modal } from '../../components/common/UIComponents';
+import { LoadingSpinner, Badge, Modal, ConfirmModal } from '../../components/common/UIComponents';
 import { StartupBanner } from '../../components/common/StartupBanner';
 import {
   Building,
@@ -26,6 +27,7 @@ import {
   Phone,
   Lock,
   ShieldCheck,
+  LogOut,
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -33,8 +35,16 @@ import { useAuth } from '../../context/AuthContext';
 
 export const SettingsPage: React.FC = () => {
   const { t, language, setLanguage } = useLanguage();
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, logout } = useAuth();
+  const navigate = useNavigate();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const isStaffAdmin = user?.role === 1 || user?.role === 2;
+
+  const confirmLogout = () => {
+    sessionStorage.setItem('eduflow_logout_msg', 'true');
+    logout();
+    navigate(`/${language.toLowerCase()}/login`);
+  };
 
   const [activeSection, setActiveSection] = useState<'profile' | 'org' | 'telegram' | 'sub' | 'theme' | 'finance'>(
     isStaffAdmin ? 'org' : 'profile'
@@ -280,7 +290,7 @@ export const SettingsPage: React.FC = () => {
   const banner = getBannerDetails();
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto animate-in fade-in duration-300">
+    <div className="space-y-6 max-w-7xl 2xl:max-w-[1500px] 3xl:max-w-[1900px] mx-auto animate-in fade-in duration-300">
       <StartupBanner
         badgeText={banner.badge}
         title={banner.title}
@@ -292,7 +302,7 @@ export const SettingsPage: React.FC = () => {
 
       {/* Settings Navigation Tabs (Only rendered when there are multiple sections for staff admin) */}
       {isStaffAdmin && (
-        <div className="flex bg-white/90 dark:bg-slate-900/90 p-1.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs max-w-xl gap-1 overflow-x-auto backdrop-blur-md">
+        <div className="flex bg-white/90 dark:bg-slate-900/90 p-1.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs w-full max-w-2xl gap-1 overflow-x-auto scroll-touch backdrop-blur-md">
           {[
             { id: 'profile', label: t('profile.tab', 'Shaxsiy Profil & Parametrlar'), icon: User },
             { id: 'org', label: t('settings.general', 'O‘quv Markazi'), icon: Building },
@@ -536,6 +546,29 @@ export const SettingsPage: React.FC = () => {
               </button>
             </div>
           </form>
+
+          {/* Danger Zone: Session Termination / Logout */}
+          <div className="pt-6 border-t border-rose-100 dark:border-rose-950/60">
+            <div className="p-4 sm:p-5 rounded-2xl bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200/80 dark:border-rose-900/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-rose-700 dark:text-rose-400 font-extrabold text-sm">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{t('auth.danger_zone_title', 'Sessiyani yakunlash / Chiqish')}</span>
+                </div>
+                <p className="text-xs text-rose-600/80 dark:text-rose-400/80 max-w-xl">
+                  {t('auth.danger_zone_desc', 'Akkauntingizdan xavfsiz chiqish va joriy qurilmadagi sessiyani to‘xtatish.')}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowLogoutConfirm(true)}
+                className="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-extrabold rounded-xl shadow-md shadow-rose-600/20 hover:shadow-rose-600/30 transition-all flex items-center gap-2 cursor-pointer shrink-0"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>{t('header.logout', 'Chiqish')}</span>
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -930,6 +963,18 @@ export const SettingsPage: React.FC = () => {
           ))}
         </div>
       </Modal>
+
+      {/* Logout Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        onConfirm={confirmLogout}
+        title={t('auth.logout_confirm_title', 'Tizimdan chiqishni xohlaysizmi?')}
+        message={t('auth.logout_confirm_desc', 'Joriy sessiyangiz yakunlanadi. Qayta kirish uchun login va parolingizni kiritishingiz kerak bo‘ladi.')}
+        confirmText={t('auth.logout_btn', 'Ha, chiqish')}
+        cancelText={t('action.cancel', 'Bekor qilish')}
+        isDanger={true}
+      />
     </div>
   );
 };

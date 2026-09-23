@@ -5,8 +5,10 @@ import { SearchResultItemDto } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAuth } from '../../context/AuthContext';
 import { Search, X, Users, GraduationCap, UsersRound, Calendar, CreditCard, Award, ArrowRight } from 'lucide-react';
+import { useBodyScrollLock } from '../../utils/scrollLock';
 
 export const GlobalSearchModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
+  useBodyScrollLock(isOpen);
   const { language } = useLanguage();
   const { user } = useAuth();
   const [query, setQuery] = useState('');
@@ -128,12 +130,17 @@ export const GlobalSearchModal: React.FC<{ isOpen: boolean; onClose: () => void 
           onClose();
         }
       }}
-      className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 p-3 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150 cursor-default"
+      onWheel={(e) => {
+        if (e.target === e.currentTarget) {
+          e.preventDefault();
+        }
+      }}
+      className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 p-3 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150 cursor-default overscroll-contain select-none touch-none"
     >
       <div
         ref={modalRef}
         onClick={(e) => e.stopPropagation()}
-        className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden border border-slate-200/90 dark:border-slate-800 flex flex-col"
+        className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden border border-slate-200/90 dark:border-slate-800 flex flex-col overscroll-contain select-text touch-auto"
       >
         {/* Search Input */}
         <div className="flex items-center px-4 py-3.5 border-b border-slate-100 dark:border-slate-800 gap-3">
@@ -192,7 +199,7 @@ export const GlobalSearchModal: React.FC<{ isOpen: boolean; onClose: () => void 
         </div>
 
         {/* Results Area */}
-        <div className="max-h-[60vh] overflow-y-auto p-2">
+        <div className="max-h-[60vh] overflow-y-auto overscroll-contain p-2 scroll-touch touch-pan-y">
           {loading ? (
             <div className="p-8 text-center text-sm text-slate-500">Qidirilmoqda...</div>
           ) : results.length > 0 ? (

@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { groupApi, lessonApi, attendanceApi, teacherApi } from '../../services/api';
 import { Group, Lesson, Student, Teacher } from '../../types';
-import { Badge, LoadingSpinner, EmptyState, Pagination } from '../../components/common/UIComponents';
+import { Badge, LoadingSpinner, EmptyState, Pagination, ConfirmModal } from '../../components/common/UIComponents';
 import { StartupBanner } from '../../components/common/StartupBanner';
 import { StartupEmptyState } from '../../components/common/StartupEmptyState';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAuth } from '../../context/AuthContext';
 import {
+  Trash2,
+  ArrowUpDown,
   CheckCircle2,
   XCircle,
   Clock,
@@ -416,15 +418,20 @@ export const AttendancePage: React.FC = () => {
       const pCount = items.filter((i) => i.status === 1).length;
       const aCount = items.filter((i) => i.status === 2).length;
       const lCount = items.filter((i) => i.status === 3).length;
+      const eCount = items.filter((i) => i.status === 4).length;
 
       const groupTitle = currentLesson?.groupName || selectedGroup?.name || 'Guruh';
-      const msg = `Davomat muvaffaqiyatli saqlandi! [${groupTitle}] — Keldi: ${pCount}, Kelmadi: ${aCount}, Kechikdi: ${lCount}. Jami: ${students.length} nafar o'quvchi.`;
+      const msg = `[${groupTitle}] — Keldi: ${pCount}, Kelmadi: ${aCount}, Kechikdi: ${lCount}, Sababli: ${eCount}. Jami: ${students.length} nafar o‘quvchi.`;
       setSuccessMessage(msg);
-      setTimeout(() => setSuccessMessage(''), 6000);
 
+      // Smooth scroll to top of page so top banner is in view
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Refresh recent lessons and group details from backend
       const detailRes = await groupApi.getById(selectedGroupId);
       if (detailRes.success && detailRes.data) {
         setGroupLessons((detailRes.data.recentLessons || []) as unknown as Lesson[]);
+        setSelectedGroup(detailRes.data);
       }
     } catch (err) {
       console.error('Save attendance error', err);
@@ -473,7 +480,34 @@ export const AttendancePage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto animate-in fade-in duration-300">
+    <div className="space-y-6 w-full max-w-7xl 2xl:max-w-[1600px] 3xl:max-w-[2100px] 4xl:max-w-[2800px] mx-auto animate-in fade-in duration-300">
+      {/* Attendance Submission Prominent Alert Banner */}
+      {successMessage && (
+        <div className="p-4 sm:p-5 bg-emerald-50 dark:bg-emerald-950/80 border-2 border-emerald-500/80 text-emerald-900 dark:text-emerald-100 rounded-3xl text-xs sm:text-sm font-bold shadow-xl shadow-emerald-500/10 animate-in fade-in slide-in-from-top duration-300 flex items-start sm:items-center justify-between gap-3">
+          <div className="flex items-start sm:items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/30">
+              <CheckCircle2 className="w-6 h-6 stroke-[2.5]" />
+            </div>
+            <div>
+              <p className="font-black text-sm sm:text-base text-emerald-950 dark:text-emerald-50">
+                {t('attendance.saved_title', 'Davomat muvaffaqiyatli saqlandi va markaz ma’muriyatiga yuborildi!')}
+              </p>
+              <p className="text-xs sm:text-sm font-semibold text-emerald-800 dark:text-emerald-300 mt-0.5 leading-relaxed">
+                {successMessage}
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setSuccessMessage('')}
+            className="p-1.5 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 cursor-pointer shrink-0 transition-colors"
+            title="Yopish"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       {/* Banner */}
       <StartupBanner
         badgeText={isAdmin ? "Davomat Nazorati & O'qituvchilar ⚡" : "Davomat Tizimi ⚡"}
@@ -501,12 +535,12 @@ export const AttendancePage: React.FC = () => {
 
       {/* Admin Top Level Navigation Tabs (Sleek Apple / Linear style Segmented Control) */}
       {isAdmin && (
-        <div className="flex justify-center my-2">
-          <div className="inline-flex items-center p-1.5 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800 shadow-sm shadow-slate-200/40 dark:shadow-black/20 gap-1.5">
+        <div className="flex justify-center my-2 overflow-x-auto no-scrollbar py-1">
+          <div className="inline-flex items-center p-1 sm:p-1.5 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800 shadow-sm shadow-slate-200/40 dark:shadow-black/20 gap-1 sm:gap-1.5 shrink-0">
             <button
               type="button"
               onClick={() => setAdminTab('teachers')}
-              className={`flex items-center gap-2.5 px-6 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-200 cursor-pointer select-none whitespace-nowrap ${
+              className={`flex items-center gap-2 sm:gap-2.5 px-3.5 sm:px-6 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-200 cursor-pointer select-none whitespace-nowrap ${
                 adminTab === 'teachers'
                   ? 'bg-[#0050cb] text-white shadow-md shadow-blue-600/25 scale-[1.01]'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-800/60'
@@ -528,7 +562,7 @@ export const AttendancePage: React.FC = () => {
             <button
               type="button"
               onClick={() => setAdminTab('groups')}
-              className={`flex items-center gap-2.5 px-6 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-200 cursor-pointer select-none whitespace-nowrap ${
+              className={`flex items-center gap-2 sm:gap-2.5 px-3.5 sm:px-6 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-200 cursor-pointer select-none whitespace-nowrap ${
                 adminTab === 'groups'
                   ? 'bg-[#0050cb] text-white shadow-md shadow-blue-600/25 scale-[1.01]'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-800/60'
@@ -547,14 +581,6 @@ export const AttendancePage: React.FC = () => {
               </span>
             </button>
           </div>
-        </div>
-      )}
-
-      {/* Success Notification Toast Banner */}
-      {successMessage && (
-        <div className="p-4 bg-emerald-500/10 border-2 border-emerald-500/40 text-emerald-700 dark:text-emerald-300 rounded-2xl text-xs font-black flex items-center gap-2.5 shadow-lg shadow-emerald-950/40 animate-in fade-in backdrop-blur-md">
-          <CheckCircle2 className="w-5 h-5 text-emerald-500 dark:text-emerald-400 shrink-0" />
-          <span>{successMessage}</span>
         </div>
       )}
 
@@ -957,31 +983,31 @@ export const AttendancePage: React.FC = () => {
             </div>
 
             {/* Tab Toggle: Attendance vs History */}
-            <div className="flex items-center justify-end gap-1 pt-3 border-t border-slate-800/80">
-              <div className="flex items-center gap-1 bg-slate-800/80 p-1.5 rounded-2xl shrink-0 border border-slate-700/60">
+            <div className="flex items-center justify-center sm:justify-end gap-1 pt-3 border-t border-slate-700/80 w-full">
+              <div className="grid grid-cols-2 gap-1 bg-slate-800/80 p-1 sm:p-1.5 rounded-2xl w-full sm:w-auto border border-slate-700/60">
                 <button
                   type="button"
                   onClick={() => setActiveTab('attendance')}
-                  className={`px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 cursor-pointer ${
+                  className={`px-2.5 sm:px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     activeTab === 'attendance'
                       ? 'bg-blue-600 text-white shadow-md shadow-blue-900/50'
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >
-                  <UserCheck className="w-4 h-4" />
-                  <span>{isAdmin ? 'Davomatni Ko‘rish' : 'Davomat belgilash'}</span>
+                  <UserCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                  <span className="truncate">{isAdmin ? t('attendance.mark_tab', 'Davomatni Ko‘rish') : t('attendance.mark_tab', 'Davomat belgilash')}</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveTab('history')}
-                  className={`px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 cursor-pointer ${
+                  className={`px-2.5 sm:px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     activeTab === 'history'
                       ? 'bg-blue-600 text-white shadow-md shadow-blue-900/50'
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >
-                  <History className="w-4 h-4" />
-                  <span>Guruh jurnali (Tarix)</span>
+                  <History className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                  <span className="truncate">{t('attendance.history_tab', 'Guruh jurnali (Tarix)')}</span>
                 </button>
               </div>
             </div>
@@ -1306,6 +1332,21 @@ export const AttendancePage: React.FC = () => {
                   </div>
                 ) : (
                   <div className="space-y-2.5">
+                    {students.some((s) => s.isPaymentBlocked) && (
+                      <div className="mb-3 p-3.5 bg-rose-500/15 border border-rose-500/40 rounded-2xl flex items-center justify-between gap-3 text-rose-300">
+                        <div className="flex items-center gap-2.5">
+                          <span className="text-xl">🚫</span>
+                          <div>
+                            <h5 className="text-xs font-black text-rose-200">
+                              To'lov muddati o'tgan o'quvchilar mavjud: {students.filter((s) => s.isPaymentBlocked).length} nafar
+                            </h5>
+                            <p className="text-[11px] text-rose-300/80">
+                              Qizil hoshiya bilan belgilangan o'quvchilarning oylik to'lov muddati tugagan. Ular to'lov qilmaguncha darsga kiritilmasin!
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     {filteredStudents.map((st, idx) => {
                       const currentStatus = attendanceMap[st.id]?.status ?? 1;
                       const currentComment = attendanceMap[st.id]?.comment ?? '';
@@ -1314,7 +1355,9 @@ export const AttendancePage: React.FC = () => {
                         <div
                           key={st.id}
                           className={`p-4 rounded-2xl border transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 backdrop-blur-md ${
-                            currentStatus === 1
+                            st.isPaymentBlocked
+                              ? 'bg-rose-950/30 border-rose-600/80 shadow-md shadow-rose-950/40 ring-1 ring-rose-500/50'
+                              : currentStatus === 1
                               ? 'bg-slate-900/60 hover:bg-slate-900/90 border-slate-800/80 hover:border-emerald-500/40'
                               : currentStatus === 2
                               ? 'bg-rose-950/15 hover:bg-rose-950/25 border-rose-900/40'
@@ -1330,7 +1373,9 @@ export const AttendancePage: React.FC = () => {
                             </span>
                             <div
                               className={`relative w-11 h-11 rounded-2xl font-black flex items-center justify-center text-sm shrink-0 border ${
-                                currentStatus === 1
+                                st.isPaymentBlocked
+                                  ? 'bg-rose-500/20 border-rose-500/50 text-rose-300'
+                                  : currentStatus === 1
                                   ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
                                   : currentStatus === 2
                                   ? 'bg-rose-500/10 border-rose-500/30 text-rose-400'
@@ -1342,7 +1387,9 @@ export const AttendancePage: React.FC = () => {
                               {st.firstName ? st.firstName[0] : 'O'}
                               <span
                                 className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-slate-900 ${
-                                  currentStatus === 1
+                                  st.isPaymentBlocked
+                                    ? 'bg-rose-600'
+                                    : currentStatus === 1
                                     ? 'bg-emerald-500'
                                     : currentStatus === 2
                                     ? 'bg-rose-500'
@@ -1353,14 +1400,26 @@ export const AttendancePage: React.FC = () => {
                               />
                             </div>
                             <div>
-                              <h4 className="font-extrabold text-sm text-white">
-                                {st.fullName || `${st.firstName} ${st.lastName}`}
-                              </h4>
-                              <div className="flex items-center gap-2 text-xs text-slate-400 mt-0.5">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <h4 className="font-extrabold text-sm text-white">
+                                  {st.fullName || `${st.firstName} ${st.lastName}`}
+                                </h4>
+                                {st.isPaymentBlocked && (
+                                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black bg-rose-500/20 text-rose-300 border border-rose-500/50 animate-pulse">
+                                    🚫 Darsga kiritilmaydi (To'lov muddati o'tgan)
+                                  </span>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-2 text-xs text-slate-400 mt-0.5 flex-wrap">
                                 <span className="flex items-center gap-1">
                                   <Phone className="w-3 h-3 text-slate-500" />
                                   <span>{st.phoneNumber || 'Telefon raqamsiz'}</span>
                                 </span>
+                                {st.paidUntil && (
+                                  <span className={`text-[10px] ${st.isPaymentBlocked ? 'text-rose-400 font-bold' : 'text-slate-500'}`}>
+                                    • To'lov muddati: {new Date(st.paidUntil).toLocaleDateString()}
+                                  </span>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -1510,18 +1569,39 @@ export const LessonsPage: React.FC = () => {
   const navigate = useNavigate();
   const langPrefix = '/' + language.toLowerCase();
   const locale = language === 'RU' ? 'ru-RU' : language === 'EN' ? 'en-US' : 'uz-UZ';
+  const isAdmin = !user?.role || user.role <= 2;
 
   const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalCount, setTotalCount] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
-  const fetchLessons = (p: number, ps: number) => {
+  // Filters and Sorting
+  const [descending, setDescending] = useState(false);
+  const [selectedGroupId, setSelectedGroupId] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'scheduled' | 'completed'>('all');
+
+  // Delete modal state
+  const [deleteLessonId, setDeleteLessonId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    groupApi
+      .getAll({ pageSize: 100 })
+      .then((res) => {
+        if (res.items) setGroups(res.items);
+      })
+      .catch(() => {});
+  }, []);
+
+  const fetchLessons = (p: number, ps: number, gId?: string, isDesc?: boolean) => {
     setLoading(true);
     lessonApi
-      .getAll({ page: p, pageSize: ps })
+      .getAll({ page: p, pageSize: ps, groupId: gId || undefined, descending: isDesc })
       .then((res) => {
         setLessons(res.items || []);
         const total = res.totalCount ?? (res.items || []).length;
@@ -1538,14 +1618,49 @@ export const LessonsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchLessons(page, pageSize);
-  }, [page, pageSize]);
+    fetchLessons(page, pageSize, selectedGroupId, descending);
+  }, [page, pageSize, selectedGroupId, descending]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages && newPage !== page) {
       setPage(newPage);
     }
   };
+
+  const handleDeleteLesson = async () => {
+    if (!deleteLessonId) return;
+    try {
+      setIsDeleting(true);
+      await lessonApi.delete(deleteLessonId);
+      setDeleteLessonId(null);
+      fetchLessons(page, pageSize, selectedGroupId, descending);
+    } catch (err) {
+      console.error('Failed to delete lesson', err);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const formatTeacherName = (name?: string) => {
+    if (!name) return '—';
+    return name
+      .split(' ')
+      .map((w) => (w.length > 0 ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : ''))
+      .join(' ');
+  };
+
+  const filteredLessons = lessons.filter((lesson) => {
+    if (statusFilter === 'scheduled' && lesson.status === 2) return false;
+    if (statusFilter === 'completed' && lesson.status !== 2) return false;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      const topicMatch = (lesson.topic || '').toLowerCase().includes(q);
+      const groupMatch = (lesson.groupName || '').toLowerCase().includes(q);
+      const teacherMatch = (lesson.teacherName || '').toLowerCase().includes(q);
+      if (!topicMatch && !groupMatch && !teacherMatch) return false;
+    }
+    return true;
+  });
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
@@ -1560,15 +1675,76 @@ export const LessonsPage: React.FC = () => {
           { label: t('table.status', 'Holati'), value: t('status.active', 'Faol') },
         ]}
         actions={
-          <Link
-            to={user?.role === 3 ? `${langPrefix}/teacher/attendance` : `${langPrefix}/attendance`}
-            className="w-full sm:w-auto px-5 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-extrabold rounded-2xl shadow-lg shadow-emerald-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer hover:-translate-y-0.5"
-          >
-            <UserCheck className="w-4 h-4" />
-            <span>{user?.role && user.role <= 2 ? 'Davomat monitoringi' : t('header.take_attendance', 'Davomat belgilash')}</span>
-          </Link>
+          <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+            <Link
+              to={user?.role === 3 ? `${langPrefix}/teacher/attendance` : `${langPrefix}/attendance`}
+              className="w-full sm:w-auto px-5 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-extrabold rounded-2xl shadow-lg shadow-emerald-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer hover:-translate-y-0.5"
+            >
+              <UserCheck className="w-4 h-4" />
+              <span>{user?.role && user.role <= 2 ? 'Davomat monitoringi' : t('header.take_attendance', 'Davomat belgilash')}</span>
+            </Link>
+          </div>
         }
       />
+
+      {/* Filter and Search Bar */}
+      <div className="bg-slate-900/80 backdrop-blur-xl p-4 rounded-3xl border border-slate-800/80 shadow-lg flex flex-col md:flex-row items-center justify-between gap-3 text-xs">
+        <div className="w-full md:w-auto flex-1 flex flex-col sm:flex-row items-center gap-2.5">
+          {/* Search */}
+          <div className="relative w-full sm:w-64">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Mavzu, guruh, ustoz..."
+              className="w-full bg-slate-800/90 border border-slate-700/80 text-white placeholder-slate-400 rounded-xl pl-9 pr-3 py-2 text-xs focus:outline-none focus:border-blue-500 transition-colors"
+            />
+          </div>
+
+          {/* Group Filter */}
+          <select
+            value={selectedGroupId}
+            onChange={(e) => {
+              setSelectedGroupId(e.target.value);
+              setPage(1);
+            }}
+            className="w-full sm:w-auto bg-slate-800/90 border border-slate-700/80 text-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-blue-500 cursor-pointer"
+          >
+            <option value="">Barcha guruhlar</option>
+            {groups.map((g) => (
+              <option key={g.id} value={g.id}>
+                {g.name}
+              </option>
+            ))}
+          </select>
+
+          {/* Status Filter */}
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value as any)}
+            className="w-full sm:w-auto bg-slate-800/90 border border-slate-700/80 text-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-blue-500 cursor-pointer"
+          >
+            <option value="all">Barcha holatlar</option>
+            <option value="scheduled">Rejalashtirilgan</option>
+            <option value="completed">Tugallangan</option>
+          </select>
+        </div>
+
+        {/* Sort Order Toggle */}
+        <button
+          type="button"
+          onClick={() => {
+            setDescending(!descending);
+            setPage(1);
+          }}
+          className="w-full md:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-slate-800 hover:bg-slate-700/90 border border-slate-700 text-slate-200 hover:text-white rounded-xl text-xs font-bold transition-colors cursor-pointer"
+          title="Sana tartibini o‘zgartirish"
+        >
+          <ArrowUpDown className="w-3.5 h-3.5 text-blue-400" />
+          <span>{descending ? 'Oxirgi darslar birinchi ⬇' : '1-darsdan boshlab tartiblash ⬆'}</span>
+        </button>
+      </div>
 
       {loading ? (
         <LoadingSpinner text={t('action.loading', 'Darslar jadvali yuklanmoqda...')} />
@@ -1596,44 +1772,68 @@ export const LessonsPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/70 text-xs">
-                {lessons.map((lesson) => (
-                  <tr key={lesson.id} className="hover:bg-slate-800/40 transition-colors">
-                    <td className="py-4 px-6 whitespace-nowrap">
-                      <strong className="text-white block font-bold text-sm">{lesson.groupName}</strong>
-                      <span className="text-[11px] text-slate-400 block">{lesson.subjectName}</span>
-                    </td>
-                    <td className="py-4 px-6 min-w-[200px]">
-                      <span className="text-slate-300 font-semibold">{lesson.topic}</span>
-                    </td>
-                    <td className="py-4 px-6 whitespace-nowrap text-slate-300 font-medium">{lesson.teacherName || '—'}</td>
-                    <td className="py-4 px-6 whitespace-nowrap">
-                      <span className="text-white font-bold block whitespace-nowrap">
-                        {new Date(lesson.startTime).toLocaleDateString(locale)}
-                      </span>
-                      <span className="text-[11px] text-slate-400 block whitespace-nowrap">
-                        {new Date(lesson.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} -{' '}
-                        {new Date(lesson.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                    </td>
-                    <td className="py-4 px-6 text-center whitespace-nowrap">
-                      <span className="text-emerald-400 font-bold">{lesson.presentCount}</span> /{' '}
-                      <span className="text-slate-400">{lesson.totalStudents}</span>
-                    </td>
-                    <td className="py-4 px-6 text-center whitespace-nowrap">
-                      <Badge variant={lesson.status === 2 ? 'success' : 'warning'}>
-                        {lesson.status === 2 ? t('status.completed', 'Tugallangan') : t('status.scheduled', 'Rejalashtirilgan')}
-                      </Badge>
-                    </td>
-                    <td className="py-4 px-6 text-right whitespace-nowrap">
-                      <Link
-                        to={user?.role === 3 ? `${langPrefix}/teacher/attendance/${lesson.id}` : `${langPrefix}/attendance/${lesson.id}`}
-                        className="inline-flex items-center justify-center whitespace-nowrap px-4 py-2 bg-blue-500/10 border border-blue-500/20 text-blue-300 hover:bg-blue-500/20 font-bold rounded-xl text-xs transition-colors shrink-0 shadow-xs"
-                      >
-                        {user?.role && user.role <= 2 ? 'Davomatni ko‘rish' : t('action.attend', 'Davomat')}
-                      </Link>
+                {filteredLessons.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="py-8 text-center text-slate-400">
+                      Filtr bo‘yicha darslar topilmadi.
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  filteredLessons.map((lesson) => (
+                    <tr key={lesson.id} className="hover:bg-slate-800/40 transition-colors">
+                      <td className="py-4 px-6 whitespace-nowrap">
+                        <strong className="text-white block font-bold text-sm">{lesson.groupName}</strong>
+                        {lesson.subjectName && (
+                          <span className="text-[11px] text-slate-400 block">{lesson.subjectName}</span>
+                        )}
+                      </td>
+                      <td className="py-4 px-6 min-w-[200px]">
+                        <span className="text-slate-200 font-semibold">{lesson.topic}</span>
+                      </td>
+                      <td className="py-4 px-6 whitespace-nowrap text-slate-300 font-medium">
+                        {formatTeacherName(lesson.teacherName)}
+                      </td>
+                      <td className="py-4 px-6 whitespace-nowrap">
+                        <span className="text-white font-bold block whitespace-nowrap">
+                          {new Date(lesson.startTime).toLocaleDateString(locale)}
+                        </span>
+                        <span className="text-[11px] text-slate-400 block whitespace-nowrap">
+                          {new Date(lesson.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} -{' '}
+                          {new Date(lesson.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6 text-center whitespace-nowrap">
+                        <span className="text-emerald-400 font-bold">{lesson.presentCount}</span> /{' '}
+                        <span className="text-slate-400">{lesson.totalStudents}</span>
+                      </td>
+                      <td className="py-4 px-6 text-center whitespace-nowrap">
+                        <Badge variant={lesson.status === 2 ? 'success' : 'warning'}>
+                          {lesson.status === 2 ? t('status.completed', 'Tugallangan') : t('status.scheduled', 'Rejalashtirilgan')}
+                        </Badge>
+                      </td>
+                      <td className="py-4 px-6 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-2">
+                          <Link
+                            to={user?.role === 3 ? `${langPrefix}/teacher/attendance/${lesson.id}` : `${langPrefix}/attendance/${lesson.id}`}
+                            className="inline-flex items-center justify-center whitespace-nowrap px-4 py-2 bg-blue-500/10 border border-blue-500/20 text-blue-300 hover:bg-blue-500/20 font-bold rounded-xl text-xs transition-colors shrink-0 shadow-xs"
+                          >
+                            {user?.role && user.role <= 2 ? 'Davomatni ko‘rish' : t('action.attend', 'Davomat')}
+                          </Link>
+                          {isAdmin && (
+                            <button
+                              type="button"
+                              onClick={() => setDeleteLessonId(lesson.id)}
+                              title="Darsni o‘chirish"
+                              className="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 transition-colors cursor-pointer shrink-0"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -1715,6 +1915,18 @@ export const LessonsPage: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        isOpen={!!deleteLessonId}
+        onClose={() => setDeleteLessonId(null)}
+        onConfirm={handleDeleteLesson}
+        title="Darsni o‘chirish"
+        message="Haqiqatan ham ushbu darsni ro‘yxatdan o‘chirmoqchimisiz? Darsga tegishli davomat va baholar ham o‘chirilishi mumkin."
+        confirmText={isDeleting ? 'O‘chirilmoqda...' : 'Ha, o‘chirilsin'}
+        cancelText="Bekor qilish"
+        isDanger={true}
+      />
     </div>
   );
 };

@@ -65,30 +65,30 @@ export const StartupBanner: React.FC<StartupBannerProps> = ({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-3xl p-6 sm:p-8 border shadow-lg backdrop-blur-xl transition-all duration-300 group ${
+      className={`relative overflow-hidden rounded-3xl p-5 sm:p-7 md:p-8 3xl:p-10 4xl:p-12 border shadow-lg backdrop-blur-xl transition-all duration-300 group ${
         isNight ? currentTheme.dark : currentTheme.light
       }`}
     >
       {/* Decorative Floating Glowing Orbs */}
       <div
-        className={`absolute -right-12 -top-12 w-56 h-56 rounded-full blur-3xl pointer-events-none transition-all duration-500 animate-pulse ${currentTheme.glow}`}
+        className={`absolute -right-12 -top-12 w-56 3xl:w-80 h-56 3xl:h-80 rounded-full blur-3xl pointer-events-none transition-all duration-500 animate-pulse ${currentTheme.glow}`}
       />
       <div
-        className={`absolute -left-12 -bottom-12 w-56 h-56 rounded-full blur-3xl pointer-events-none transition-all duration-500 ${currentTheme.glow}`}
+        className={`absolute -left-12 -bottom-12 w-56 3xl:w-80 h-56 3xl:h-80 rounded-full blur-3xl pointer-events-none transition-all duration-500 ${currentTheme.glow}`}
       />
 
-      <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-5 sm:gap-6 3xl:gap-8">
         {/* Left Column: Icon + Title + Description */}
-        <div className="space-y-3 max-w-2xl">
+        <div className="space-y-3 max-w-2xl 3xl:max-w-4xl 4xl:max-w-6xl">
           <div className="flex flex-wrap items-center gap-2.5">
             <div
-              className={`w-12 h-12 rounded-2xl bg-gradient-to-tr ${currentTheme.accent} text-white flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform shrink-0`}
+              className={`w-11 h-11 sm:w-12 sm:h-12 3xl:w-16 3xl:h-16 rounded-2xl bg-gradient-to-tr ${currentTheme.accent} text-white flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform shrink-0`}
             >
               {icon}
             </div>
 
             <span
-              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold border transition-all ${currentTheme.badge}`}
+              className={`inline-flex items-center gap-1.5 px-3 py-1 3xl:px-4 3xl:py-1.5 rounded-full text-[11px] 3xl:text-xs font-bold border transition-all ${currentTheme.badge}`}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
               <span>{badgeText}</span>
@@ -96,27 +96,27 @@ export const StartupBanner: React.FC<StartupBannerProps> = ({
           </div>
 
           <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+            <h1 className="text-xl sm:text-2xl md:text-3xl 3xl:text-4xl 4xl:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
               {title}
             </h1>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1.5 leading-relaxed">
+            <p className="text-xs sm:text-sm 3xl:text-base 4xl:text-lg text-slate-600 dark:text-slate-300 mt-1.5 leading-relaxed">
               {description}
             </p>
           </div>
 
           {/* Quick Metrics Bar if provided */}
           {metrics.length > 0 && (
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2">
               {metrics.map((m, i) => (
                 <div
                   key={i}
-                  className="px-3.5 py-1.5 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 shadow-xs flex items-center gap-2 text-xs backdrop-blur-md"
+                  className="px-3 sm:px-3.5 py-1.5 3xl:px-5 3xl:py-2.5 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 shadow-xs flex items-center gap-2 text-xs 3xl:text-sm backdrop-blur-md"
                 >
                   {m.icon && <span className="text-slate-400">{m.icon}</span>}
                   <span className="text-slate-500 dark:text-slate-400">{m.label}:</span>
                   <span className="font-extrabold text-slate-800 dark:text-white">{m.value}</span>
                   {m.change && (
-                    <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-1 rounded">
+                    <span className="text-[10px] 3xl:text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-1 rounded">
                       {m.change}
                     </span>
                   )}
@@ -128,7 +128,7 @@ export const StartupBanner: React.FC<StartupBannerProps> = ({
 
         {/* Right Column: Actions Slot */}
         {actions && (
-          <div className="w-full lg:w-auto shrink-0 flex flex-wrap items-center gap-3">
+          <div className="w-full lg:w-auto shrink-0 flex flex-wrap items-center gap-2.5 sm:gap-3">
             {actions}
           </div>
         )}

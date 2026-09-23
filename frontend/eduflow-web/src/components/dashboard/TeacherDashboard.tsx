@@ -34,6 +34,7 @@ import {
   BookOpen,
 } from 'lucide-react';
 import { LoadingSpinner, Badge } from '../common/UIComponents';
+import { PromotionBanner } from '../common/PromotionBanner';
 
 export const TeacherDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -118,6 +119,9 @@ export const TeacherDashboard: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
+      {/* Promotional Campaign Banner with LocalStorage Persistence */}
+      <PromotionBanner />
+
       {/* Teacher Hero Welcome Banner */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0050cb] via-[#003fa4] to-[#002b70] p-6 sm:p-8 text-white shadow-lg">
         <div className="absolute -right-16 -top-16 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />

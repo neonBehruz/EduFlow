@@ -540,6 +540,13 @@ public class FinanceService : IFinanceService
 
         var result = new List<TeacherSalaryReportItemDto>();
 
+        // Load attendances in this period to calculate excused absence deductions
+        var periodLessons = await _context.Lessons
+            .AsNoTracking()
+            .Where(l => l.StartTime >= start && l.StartTime <= end)
+            .Include(l => l.Attendances)
+            .ToListAsync();
+
         foreach (var teacher in teachers)
         {
             decimal sharePercent = teacher.CustomSharePercentage ?? setting.DefaultTeacherSharePercentage;
@@ -554,10 +561,34 @@ public class FinanceService : IFinanceService
             decimal totalCollected = teacherPayments.Sum(p => p.PaidAmount > 0 ? p.PaidAmount : (p.Status == PaymentStatus.Paid ? p.Amount : 0m));
             decimal totalCourseFees = teacherPayments.Sum(p => p.FinalAmount > 0 ? p.FinalAmount : p.Amount);
 
-            // Calculate salary from each payment's immutable snapshot TeacherShareAmount
-            decimal salary = teacherPayments.Sum(p => p.TeacherShareAmount > 0 
-                ? p.TeacherShareAmount 
-                : Math.Round((p.PaidAmount > 0 ? p.PaidAmount : (p.Status == PaymentStatus.Paid ? p.Amount : 0m)) * (p.TeacherSharePercent > 0 ? p.TeacherSharePercent / 100m : sharePercent / 100m), 2, MidpointRounding.AwayFromZero));
+            // Attendance check for teacher's lessons in this period
+            var teacherLessons = periodLessons.Where(l => l.TeacherId == teacher.Id || groupIds.Contains(l.GroupId)).ToList();
+            var allAtts = teacherLessons.SelectMany(l => l.Attendances).ToList();
+            int excusedCount = allAtts.Count(a => a.Status == AttendanceStatus.Excused);
+            int billableCount = allAtts.Count(a => a.Status == AttendanceStatus.Present || a.Status == AttendanceStatus.Absent || a.Status == AttendanceStatus.Late) + excusedCount;
+
+            decimal salary = 0m;
+            if (teacher.SalaryModel == PayrollType.FixedSalary)
+            {
+                salary = teacher.FixedSalaryAmount ?? 5000000m;
+            }
+            else
+            {
+                // Percentage model from strictly collected revenue
+                decimal rawShare = teacherPayments.Sum(p => p.TeacherShareAmount > 0 
+                    ? p.TeacherShareAmount 
+                    : Math.Round((p.PaidAmount > 0 ? p.PaidAmount : (p.Status == PaymentStatus.Paid ? p.Amount : 0m)) * (p.TeacherSharePercent > 0 ? p.TeacherSharePercent / 100m : sharePercent / 100m), 2, MidpointRounding.AwayFromZero));
+
+                // Deduct excused absences
+                decimal excusedDeduction = 0m;
+                if (excusedCount > 0 && billableCount > 0 && totalCollected > 0)
+                {
+                    decimal perAtt = totalCollected / billableCount;
+                    excusedDeduction = Math.Round(excusedCount * perAtt * (sharePercent / 100m), 2);
+                }
+
+                salary = Math.Max(0m, rawShare - excusedDeduction);
+            }
 
             decimal centerRetained = Math.Max(0m, totalCollected - salary);
 
@@ -573,7 +604,10 @@ public class FinanceService : IFinanceService
                 TotalCourseFees: totalCourseFees,
                 TotalCollectedFromStudents: totalCollected,
                 TeacherSalaryAmount: salary,
-                CenterRetainedAmount: centerRetained
+                CenterRetainedAmount: centerRetained,
+                SalaryModel: teacher.SalaryModel,
+                FixedSalaryAmount: teacher.FixedSalaryAmount,
+                ExcusedAbsenceDeductions: excusedCount
             ));
         }
 

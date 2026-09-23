@@ -31,7 +31,7 @@ public class StudentService : IStudentService
         _mapper = mapper;
     }
 
-    public async Task<PagedResult<StudentDto>> GetStudentsAsync(string? search, Guid? groupId, bool? isActive, int page = 1, int pageSize = 10)
+    public async Task<PagedResult<StudentDto>> GetStudentsAsync(string? search, Guid? groupId, bool? isActive, bool? isBlocked = null, int page = 1, int pageSize = 10)
     {
         pageSize = Math.Clamp(pageSize, 1, 100);
         var query = _context.Students
@@ -45,6 +45,11 @@ public class StudentService : IStudentService
         if (isActive.HasValue)
         {
             query = query.Where(s => s.IsActive == isActive.Value);
+        }
+
+        if (isBlocked.HasValue)
+        {
+            query = query.Where(s => s.IsPaymentBlocked == isBlocked.Value);
         }
 
         if (groupId.HasValue)
@@ -68,6 +73,38 @@ public class StudentService : IStudentService
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
+
+        var now = DateTime.UtcNow;
+        bool needsSave = false;
+        foreach (var s in students)
+        {
+            // Backfill PaidUntil if null from last successful payment
+            if (!s.PaidUntil.HasValue && s.Payments.Any(p => p.Status == PaymentStatus.Paid && p.PaymentDate.HasValue))
+            {
+                var latestPaidDate = s.Payments.Where(p => p.Status == PaymentStatus.Paid && p.PaymentDate.HasValue)
+                    .Max(p => p.PaymentDate!.Value);
+                s.PaidUntil = latestPaidDate.AddMonths(1);
+                s.LastPaymentDate = latestPaidDate;
+                needsSave = true;
+            }
+
+            // Automatic Payment Expiry & Block:
+            // If student's PaidUntil date has passed and no payment covers current month
+            if (s.PaidUntil.HasValue && s.PaidUntil.Value < now)
+            {
+                bool hasCurrentPaid = s.Payments.Any(p => p.Status == PaymentStatus.Paid && p.PaymentDate.HasValue && p.PaymentDate.Value >= s.PaidUntil.Value.AddDays(-5));
+                if (!hasCurrentPaid && !s.IsPaymentBlocked)
+                {
+                    s.IsPaymentBlocked = true;
+                    s.PaymentBlockReason = $"Oylik to'lov muddati ({s.PaidUntil.Value:dd.MM.yyyy}) o'tgan (darsga kiritilmasin)";
+                    needsSave = true;
+                }
+            }
+        }
+        if (needsSave)
+        {
+            await _context.SaveChangesAsync();
+        }
 
         var studentDtos = _mapper.Map<List<StudentDto>>(students);
 
@@ -93,6 +130,26 @@ public class StudentService : IStudentService
         if (_currentUser.Role != UserRole.SuperAdmin && _currentUser.OrganizationId.HasValue && student.OrganizationId != _currentUser.OrganizationId.Value)
         {
             throw new ForbiddenException();
+        }
+
+        // Check overdue for single student too
+        var nowSingle = DateTime.UtcNow;
+        if (!student.PaidUntil.HasValue && student.Payments.Any(p => p.Status == PaymentStatus.Paid && p.PaymentDate.HasValue))
+        {
+            var latestPaidDate = student.Payments.Where(p => p.Status == PaymentStatus.Paid && p.PaymentDate.HasValue)
+                .Max(p => p.PaymentDate!.Value);
+            student.PaidUntil = latestPaidDate.AddMonths(1);
+            student.LastPaymentDate = latestPaidDate;
+        }
+        if (student.PaidUntil.HasValue && student.PaidUntil.Value < nowSingle)
+        {
+            bool hasCurrentPaid = student.Payments.Any(p => p.Status == PaymentStatus.Paid && p.PaymentDate.HasValue && p.PaymentDate.Value >= student.PaidUntil.Value.AddDays(-5));
+            if (!hasCurrentPaid && !student.IsPaymentBlocked)
+            {
+                student.IsPaymentBlocked = true;
+                student.PaymentBlockReason = $"Oylik to'lov muddati ({student.PaidUntil.Value:dd.MM.yyyy}) o'tgan (darsga kiritilmasin)";
+                await _context.SaveChangesAsync();
+            }
         }
 
         var parentDto = student.Parent != null ? _mapper.Map<ParentDto>(student.Parent) : null;
@@ -124,10 +181,40 @@ public class StudentService : IStudentService
             currentPaymentStatus,
             recentAttendances,
             recentGrades,
-            recentPayments
+            recentPayments,
+            student.IsPaymentBlocked,
+            student.PaidUntil,
+            student.PaymentBlockReason,
+            student.LastPaymentDate
         );
 
         return ApiResponse<StudentDetailDto>.Ok(detailDto);
+    }
+
+    public async Task<ApiResponse<StudentDto>> ToggleBlockAsync(Guid id, bool isBlocked, string? reason = null)
+    {
+        var student = await _context.Students
+            .Include(s => s.Parent)
+            .Include(s => s.GroupStudents).ThenInclude(gs => gs.Group)
+            .Include(s => s.Attendances)
+            .Include(s => s.Grades)
+            .Include(s => s.Payments)
+            .FirstOrDefaultAsync(s => s.Id == id);
+
+        if (student == null) throw new NotFoundException("O'quvchi topilmadi.");
+
+        student.IsPaymentBlocked = isBlocked;
+        student.PaymentBlockReason = isBlocked ? (reason ?? "Administrator tomonidan to'lov sababli darsdan chetlashtirildi") : null;
+        if (!isBlocked && student.PaidUntil.HasValue && student.PaidUntil.Value < DateTime.UtcNow)
+        {
+            student.PaidUntil = DateTime.UtcNow.AddMonths(1);
+        }
+        student.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+        await _auditLogService.LogAsync("ToggleStudentBlock", "Student", student.Id.ToString(), $"Blok holati: {isBlocked}, Sabab: {reason}");
+
+        return ApiResponse<StudentDto>.Ok(_mapper.Map<StudentDto>(student), isBlocked ? "O'quvchi bloklandi (darsga kiritilmaydi)." : "O'quvchi blokdan chiqarildi.");
     }
 
     public async Task<ApiResponse<StudentDto>> CreateStudentAsync(CreateStudentDto dto)

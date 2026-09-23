@@ -53,7 +53,7 @@ public class MappingProfile : Profile
         CreateMap<Lesson, LessonDto>()
             .ForMember(d => d.GroupName, opt => opt.MapFrom(s => s.Group.Name))
             .ForMember(d => d.SubjectName, opt => opt.MapFrom(s => s.Group.Subject != null ? s.Group.Subject.Name : null))
-            .ForMember(d => d.TeacherName, opt => opt.MapFrom(s => s.Group.Teacher != null ? s.Group.Teacher.FullName : null))
+            .ForMember(d => d.TeacherName, opt => opt.MapFrom(s => s.Teacher != null ? s.Teacher.FullName : (s.Group.Teacher != null ? s.Group.Teacher.FullName : null)))
             .ForMember(d => d.TotalStudents, opt => opt.MapFrom(s => s.Group.GroupStudents.Count))
             .ForMember(d => d.PresentCount, opt => opt.MapFrom(s => s.Attendances.Count(a => a.Status == AttendanceStatus.Present || a.Status == AttendanceStatus.Late)))
             .ForMember(d => d.AbsentCount, opt => opt.MapFrom(s => s.Attendances.Count(a => a.Status == AttendanceStatus.Absent)));

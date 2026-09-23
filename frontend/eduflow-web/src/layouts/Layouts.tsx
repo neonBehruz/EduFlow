@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import { Sidebar, Header } from '../components/layout/Navigation';
+import { Sidebar, Header, MobileBottomNav } from '../components/layout/Navigation';
 import { LoadingSpinner } from '../components/common/UIComponents';
 import { ThemeToggle } from '../components/common/ThemeToggle';
 import { ThemeAtmosphere } from '../components/common/ThemeAtmosphere';
@@ -30,13 +30,16 @@ export const DashboardLayout: React.FC = () => {
       <ThemeAtmosphere withShader={false} />
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <div className="flex-1 flex flex-col md:pl-64 min-w-0 relative z-10">
+      <div className="flex-1 flex flex-col lg:pl-64 3xl:pl-72 min-w-0 relative z-10 transition-all duration-300">
         <Header onMenuClick={() => setSidebarOpen(true)} />
 
-        <main className="flex-1 p-3 sm:p-6 md:p-8 max-w-7xl w-full mx-auto">
+        <main className="flex-1 px-3 sm:px-5 md:px-6 lg:px-8 3xl:px-12 pt-3 sm:pt-5 md:pt-6 lg:pt-8 3xl:pt-10 pb-28 sm:pb-32 md:pb-36 lg:pb-16 max-w-7xl 2xl:max-w-[1600px] 3xl:max-w-[2100px] 4xl:max-w-[2800px] w-full mx-auto">
           <Outlet />
         </main>
       </div>
+
+      {/* Mobile & Tablet Bottom Navigation Bar (< 1024px / lg:hidden) */}
+      <MobileBottomNav onMenuClick={() => setSidebarOpen(true)} />
     </div>
   );
 };

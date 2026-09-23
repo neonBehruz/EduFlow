@@ -181,6 +181,22 @@ public class GroupService : IGroupService
 
         if (group == null) throw new NotFoundException("Guruh topilmadi.");
 
+        var now = DateTime.UtcNow;
+        bool needsSave = false;
+        foreach (var gs in group.GroupStudents)
+        {
+            if (gs.Student != null && gs.Student.PaidUntil.HasValue && gs.Student.PaidUntil.Value < now && !gs.Student.IsPaymentBlocked)
+            {
+                gs.Student.IsPaymentBlocked = true;
+                gs.Student.PaymentBlockReason = "Oylik to'lov muddati o'tgan (darsga kiritilmasin)";
+                needsSave = true;
+            }
+        }
+        if (needsSave)
+        {
+            await _context.SaveChangesAsync();
+        }
+
         var students = _mapper.Map<List<StudentDto>>(group.GroupStudents.Select(gs => gs.Student).ToList());
         var lessons = _mapper.Map<List<LessonDto>>(group.Lessons.OrderByDescending(l => l.StartTime).Take(50).ToList());
 

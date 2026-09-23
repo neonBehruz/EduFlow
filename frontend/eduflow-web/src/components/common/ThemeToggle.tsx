@@ -80,13 +80,13 @@ export const ThemeToggle: React.FC = () => {
       )}
 
       {/* Main Interactive Sky Capsule Switcher */}
-      <div className="flex items-center gap-1.5 bg-slate-200/50 dark:bg-slate-800/80 p-1 rounded-full border border-slate-300/60 dark:border-slate-700/80 backdrop-blur-md shadow-xs">
+      <div className="flex items-center gap-1.5 bg-slate-200/50 dark:bg-slate-800/80 p-1 rounded-full border border-slate-300/60 dark:border-slate-700/80 backdrop-blur-md shadow-xs shrink-0">
         {/* Animated Day/Night Interactive Sky Track Button */}
         <button
           onClick={handleToggleClick}
           aria-label="Kun/Tun almashtirish"
           title={`Bosganda: ${isMorning ? "🌙 Tunga o'tish" : "🌅 Tongga o'tish"}`}
-          className={`relative w-16 h-8 rounded-full overflow-hidden transition-all duration-500 cursor-pointer shadow-inner focus:outline-none select-none group border ${
+          className={`relative w-14 sm:w-16 h-7 sm:h-8 rounded-full overflow-hidden transition-all duration-500 cursor-pointer shadow-inner focus:outline-none select-none group border shrink-0 ${
             isMorning
               ? 'bg-gradient-to-r from-sky-400 via-sky-300 to-amber-300 border-amber-200 shadow-sky-200/50'
               : 'bg-gradient-to-r from-slate-950 via-indigo-950 to-purple-950 border-indigo-800 shadow-indigo-950/80'
@@ -119,22 +119,22 @@ export const ThemeToggle: React.FC = () => {
 
           {/* Morphing Sun/Moon Thumb */}
           <div
-            className={`absolute top-0.5 bottom-0.5 w-7 h-7 rounded-full transition-all duration-500 flex items-center justify-center transform shadow-md ${
+            className={`absolute top-0.5 bottom-0.5 w-6 sm:w-7 h-6 sm:h-7 rounded-full transition-all duration-500 flex items-center justify-center transform shadow-md ${
               isMorning
                 ? 'left-0.5 bg-gradient-to-tr from-amber-400 to-yellow-300 text-amber-900 translate-x-0 rotate-0 ring-2 ring-amber-300/80 shadow-amber-500/40'
-                : 'left-0.5 bg-gradient-to-tr from-slate-200 via-indigo-100 to-slate-300 text-indigo-950 translate-x-8 -rotate-12 ring-2 ring-indigo-400/50 shadow-indigo-900/60'
+                : 'left-0.5 bg-gradient-to-tr from-slate-200 via-indigo-100 to-slate-300 text-indigo-950 translate-x-7 sm:translate-x-8 -rotate-12 ring-2 ring-indigo-400/50 shadow-indigo-900/60'
             }`}
           >
             {isMorning ? (
               /* Sun with rotating rays */
               <div className="relative flex items-center justify-center w-full h-full">
-                <Sun className="w-4 h-4 text-amber-800 animate-spin-slow" />
+                <Sun className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-amber-800 animate-spin-slow" />
                 <div className="absolute inset-0 rounded-full bg-amber-400/20 animate-ping opacity-25" />
               </div>
             ) : (
               /* Moon with craters */
               <div className="relative flex items-center justify-center w-full h-full">
-                <Moon className="w-4 h-4 text-indigo-950" />
+                <Moon className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-indigo-950" />
                 {/* Moon crater dots */}
                 <div className="absolute top-1.5 right-1.5 w-1 h-1 bg-slate-400/40 rounded-full" />
                 <div className="absolute bottom-1.5 left-2 w-0.8 h-0.8 bg-slate-400/30 rounded-full" />
@@ -143,21 +143,21 @@ export const ThemeToggle: React.FC = () => {
           </div>
         </button>
 
-        {/* Dropdown Opener Pill */}
+        {/* Dropdown Opener Pill (Hidden on mobile/small screens to preserve header width) */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer ${
+          className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 ${
             isNight
               ? 'text-slate-200 hover:text-white hover:bg-slate-700/60'
               : 'text-slate-700 hover:text-slate-900 hover:bg-white/80'
           }`}
           title="Mavzular ro‘yxatini ochish"
         >
-          <span className="hidden md:inline-block text-[11px] font-bold tracking-tight">
+          <span className="text-[11px] font-bold tracking-tight whitespace-nowrap">
             {themeMode === 'auto' ? (
               <span className="flex items-center gap-1 text-emerald-500 dark:text-emerald-400">
                 <Sparkles className="w-3 h-3 animate-spin-slow" />
-                <span>{t('theme.auto', 'Avto')} ({isMorning ? t('theme.morning', 'Tong') : t('theme.night', 'Tun')})</span>
+                <span>{t('theme.auto', 'Avto')}</span>
               </span>
             ) : isMorning ? (
               `🌅 ${t('theme.morning', 'Tong')}`

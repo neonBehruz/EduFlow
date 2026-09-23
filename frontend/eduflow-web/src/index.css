@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+@theme {
+  --breakpoint-xs: 360px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+  --breakpoint-3xl: 1920px;
+  --breakpoint-4xl: 2560px;
+  --breakpoint-tv: 3840px;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
@@ -370,4 +382,41 @@ html.dark ::-webkit-scrollbar-thumb {
 }
 html.dark ::-webkit-scrollbar-thumb:hover {
   background: #475569;
+}
+
+/* ==========================================================================
+   MULTI-DEVICE RESPONSIVE UTILITIES (Mobile, Tablet, Desktop, TV)
+   ========================================================================== */
+.scroll-touch {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.pb-safe {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+}
+
+/* TV & Ultra-wide screen typography boost */
+@media (min-width: 1920px) {
+  html {
+    font-size: 16px;
+  }
+}
+@media (min-width: 2560px) {
+  html {
+    font-size: 17px;
+  }
+}
+@media (min-width: 3840px) {
+  html {
+    font-size: 20px;
+  }
 }

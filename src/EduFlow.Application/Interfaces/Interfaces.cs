@@ -54,11 +54,12 @@ public interface IAuthService
 
 public interface IStudentService
 {
-    Task<PagedResult<StudentDto>> GetStudentsAsync(string? search, Guid? groupId, bool? isActive, int page = 1, int pageSize = 10);
+    Task<PagedResult<StudentDto>> GetStudentsAsync(string? search, Guid? groupId, bool? isActive, bool? isBlocked = null, int page = 1, int pageSize = 10);
     Task<ApiResponse<StudentDetailDto>> GetStudentByIdAsync(Guid id);
     Task<ApiResponse<StudentDto>> CreateStudentAsync(CreateStudentDto dto);
     Task<ApiResponse<StudentDto>> UpdateStudentAsync(Guid id, UpdateStudentDto dto);
     Task<ApiResponse<bool>> DeleteStudentAsync(Guid id);
+    Task<ApiResponse<StudentDto>> ToggleBlockAsync(Guid id, bool isBlocked, string? reason = null);
 }
 
 public interface ITeacherService
@@ -93,7 +94,7 @@ public interface ISubjectService
 
 public interface ILessonService
 {
-    Task<PagedResult<LessonDto>> GetLessonsAsync(Guid? groupId, DateTime? date, int page = 1, int pageSize = 20);
+    Task<PagedResult<LessonDto>> GetLessonsAsync(Guid? groupId, DateTime? date, int page = 1, int pageSize = 20, bool descending = false);
     Task<List<LessonDto>> GetTodayLessonsAsync();
     Task<ApiResponse<LessonDto>> GetLessonByIdAsync(Guid id);
     Task<ApiResponse<LessonDto>> CreateLessonAsync(CreateLessonDto dto);

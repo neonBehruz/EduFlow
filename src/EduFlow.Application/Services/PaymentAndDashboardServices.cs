@@ -268,6 +268,19 @@ public class PaymentService : IPaymentService
                 Notes = "Boshlang'ich to'lov"
             };
             _context.PaymentTransactions.Add(tx);
+
+            // Update student billing cycle and unblock if paid
+            var paymentDate = payment.PaymentDate ?? DateTime.UtcNow;
+            student.PaidUntil = (student.PaidUntil.HasValue && student.PaidUntil.Value > paymentDate 
+                ? student.PaidUntil.Value 
+                : paymentDate).AddMonths(1);
+            student.LastPaymentDate = paymentDate;
+            if (payment.DebtAmount <= 0)
+            {
+                student.IsPaymentBlocked = false;
+                student.PaymentBlockReason = null;
+                student.IsActive = true;
+            }
         }
 
         await _context.SaveChangesAsync();
@@ -371,6 +384,7 @@ public class PaymentService : IPaymentService
         if (!orgId.HasValue) throw new ForbiddenException();
 
         var payment = await _context.Payments
+            .Include(p => p.Student)
             .Include(p => p.Transactions)
             .FirstOrDefaultAsync(p => p.Id == id && p.OrganizationId == orgId.Value);
 
@@ -398,6 +412,18 @@ public class PaymentService : IPaymentService
         payment.Status = PaymentStatus.Paid;
         payment.PaymentDate = DateTime.UtcNow;
         payment.UpdatedAt = DateTime.UtcNow;
+
+        if (payment.Student != null)
+        {
+            var now = DateTime.UtcNow;
+            payment.Student.PaidUntil = (payment.Student.PaidUntil.HasValue && payment.Student.PaidUntil.Value > now 
+                ? payment.Student.PaidUntil.Value 
+                : now).AddMonths(1);
+            payment.Student.LastPaymentDate = now;
+            payment.Student.IsPaymentBlocked = false;
+            payment.Student.PaymentBlockReason = null;
+            payment.Student.IsActive = true;
+        }
 
         decimal teacherPercent = payment.TeacherSharePercent > 0 ? payment.TeacherSharePercent : 20m;
         var shares = FinancialCalculator.CalculateShares(payment.PaidAmount, teacherPercent);

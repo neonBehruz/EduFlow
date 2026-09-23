@@ -100,7 +100,7 @@ export const GradesPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto animate-in fade-in duration-300">
+    <div className="space-y-6 max-w-7xl 2xl:max-w-[1500px] 3xl:max-w-[1900px] mx-auto animate-in fade-in duration-300">
       <StartupBanner
         badgeText={t('grades.badge', 'Baholar va Reyting 🏆')}
         title={t('grades.title', 'Baholar Jurnali Markazi')}

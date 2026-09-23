@@ -288,27 +288,30 @@ public class CrmService : ICrmService
             query = query.Where(tl => tl.Status == status.Value);
         }
 
-        return await query
+        var items = await query
+            .OrderBy(tl => tl.ScheduledDate)
+            .ToListAsync();
+
+        return items
             .OrderBy(tl => tl.ScheduledDate)
             .ThenBy(tl => tl.StartTime)
             .Select(tl => new TrialLessonDto(
-                tl.Id,
-                tl.LeadId,
-                tl.Lead.FullName,
-                tl.Lead.PhoneNumber,
-                tl.SubjectId,
-                tl.Subject != null ? tl.Subject.Name : null,
-                tl.TeacherId,
-                tl.Teacher != null ? tl.Teacher.FullName : null,
-                tl.RoomId,
-                tl.Room != null ? tl.Room.Name : null,
-                tl.ScheduledDate,
-                tl.StartTime.ToString(@"hh\:mm"),
-                tl.EndTime.ToString(@"hh\:mm"),
-                tl.Status,
-                tl.Notes
-            ))
-            .ToListAsync();
+            tl.Id,
+            tl.LeadId,
+            tl.Lead?.FullName ?? "",
+            tl.Lead?.PhoneNumber ?? "",
+            tl.SubjectId,
+            tl.Subject != null ? tl.Subject.Name : null,
+            tl.TeacherId,
+            tl.Teacher != null ? tl.Teacher.FullName : null,
+            tl.RoomId,
+            tl.Room != null ? tl.Room.Name : null,
+            tl.ScheduledDate,
+            tl.StartTime.ToString(@"hh\:mm"),
+            tl.EndTime.ToString(@"hh\:mm"),
+            tl.Status,
+            tl.Notes
+        )).ToList();
     }
 
     public async Task<ApiResponse<TrialLessonDto>> ScheduleTrialLessonAsync(CreateTrialLessonDto dto)

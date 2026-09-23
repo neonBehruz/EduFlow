@@ -339,38 +339,38 @@ export const PaymentsPage: React.FC = () => {
 
       {/* Financial KPIs Bento Cards */}
       {summary && (
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
-          <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs backdrop-blur-md">
-            <span className="text-[10px] font-bold text-slate-400 uppercase block tracking-wider">Jami Kutilgan Tushum</span>
-            <span className="text-base sm:text-lg font-black text-slate-800 dark:text-white mt-1 block">
+        <div className="grid grid-cols-2 lg:grid-cols-5 3xl:grid-cols-5 gap-2.5 sm:gap-3 3xl:gap-5">
+          <div className="bg-white/80 dark:bg-slate-900/80 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs backdrop-blur-md">
+            <span className="text-[10px] 3xl:text-xs font-bold text-slate-400 uppercase block tracking-wider">Jami Kutilgan Tushum</span>
+            <span className="text-base sm:text-lg 3xl:text-xl font-black text-slate-800 dark:text-white mt-1 block">
               {(summary.totalExpectedRevenue || 0).toLocaleString()} <span className="text-[10px] text-slate-400">UZS</span>
             </span>
           </div>
 
-          <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-2xl border border-emerald-200/80 dark:border-emerald-900/50 shadow-xs backdrop-blur-md bg-emerald-50/20">
-            <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase block tracking-wider">Haqiqiy Tushum</span>
-            <span className="text-base sm:text-lg font-black text-emerald-700 dark:text-emerald-300 mt-1 block">
+          <div className="bg-white/80 dark:bg-slate-900/80 p-3.5 sm:p-4 rounded-2xl border border-emerald-200/80 dark:border-emerald-900/50 shadow-xs backdrop-blur-md bg-emerald-50/20">
+            <span className="text-[10px] 3xl:text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase block tracking-wider">Haqiqiy Tushum</span>
+            <span className="text-base sm:text-lg 3xl:text-xl font-black text-emerald-700 dark:text-emerald-300 mt-1 block">
               {(summary.totalCollectedRevenue || 0).toLocaleString()} <span className="text-[10px] text-emerald-600">UZS</span>
             </span>
           </div>
 
-          <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-2xl border border-red-200/80 dark:border-red-900/50 shadow-xs backdrop-blur-md bg-red-50/20">
-            <span className="text-[10px] font-bold text-red-500 uppercase block tracking-wider">Qarzdorlik</span>
-            <span className="text-base sm:text-lg font-black text-red-600 dark:text-red-400 mt-1 block">
+          <div className="bg-white/80 dark:bg-slate-900/80 p-3.5 sm:p-4 rounded-2xl border border-red-200/80 dark:border-red-900/50 shadow-xs backdrop-blur-md bg-red-50/20">
+            <span className="text-[10px] 3xl:text-xs font-bold text-red-500 uppercase block tracking-wider">Qarzdorlik</span>
+            <span className="text-base sm:text-lg 3xl:text-xl font-black text-red-600 dark:text-red-400 mt-1 block">
               {(summary.totalDebtAmount || 0).toLocaleString()} <span className="text-[10px] text-red-500">UZS</span>
             </span>
           </div>
 
-          <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-2xl border border-purple-200/80 dark:border-purple-900/50 shadow-xs backdrop-blur-md bg-purple-50/20">
-            <span className="text-[10px] font-bold text-purple-600 dark:text-purple-400 uppercase block tracking-wider">O‘qituvchilar Ulushi</span>
-            <span className="text-base sm:text-lg font-black text-purple-700 dark:text-purple-300 mt-1 block">
+          <div className="bg-white/80 dark:bg-slate-900/80 p-3.5 sm:p-4 rounded-2xl border border-purple-200/80 dark:border-purple-900/50 shadow-xs backdrop-blur-md bg-purple-50/20">
+            <span className="text-[10px] 3xl:text-xs font-bold text-purple-600 dark:text-purple-400 uppercase block tracking-wider">O‘qituvchilar Ulushi</span>
+            <span className="text-base sm:text-lg 3xl:text-xl font-black text-purple-700 dark:text-purple-300 mt-1 block">
               {(summary.totalTeacherShares || 0).toLocaleString()} <span className="text-[10px] text-purple-600">UZS</span>
             </span>
           </div>
 
-          <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-2xl border border-blue-200/80 dark:border-blue-900/50 shadow-xs backdrop-blur-md bg-blue-50/20 col-span-2 lg:col-span-1">
-            <span className="text-[10px] font-bold text-[#0050cb] dark:text-blue-400 uppercase block tracking-wider">Sof Foyda</span>
-            <span className="text-base sm:text-lg font-black text-[#0050cb] dark:text-blue-300 mt-1 block">
+          <div className="bg-white/80 dark:bg-slate-900/80 p-3.5 sm:p-4 rounded-2xl border border-blue-200/80 dark:border-blue-900/50 shadow-xs backdrop-blur-md bg-blue-50/20 col-span-2 lg:col-span-1">
+            <span className="text-[10px] 3xl:text-xs font-bold text-[#0050cb] dark:text-blue-400 uppercase block tracking-wider">Sof Foyda</span>
+            <span className="text-base sm:text-lg 3xl:text-xl font-black text-[#0050cb] dark:text-blue-300 mt-1 block">
               {(summary.netProfit || 0).toLocaleString()} <span className="text-[10px] text-blue-400">UZS</span>
             </span>
           </div>
@@ -378,11 +378,11 @@ export const PaymentsPage: React.FC = () => {
       )}
 
       {/* Tab Switcher & Status Filter */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div className="flex bg-white/90 dark:bg-slate-900/90 p-1.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs gap-1">
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+        <div className="flex bg-white/90 dark:bg-slate-900/90 p-1.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs gap-1 overflow-x-auto scroll-touch">
           <button
             onClick={() => setActiveTab('payments')}
-            className={`py-2 px-4 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+            className={`py-2 px-3.5 sm:px-4 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               activeTab === 'payments'
                 ? 'bg-gradient-to-r from-[#0050cb] to-[#0066ff] text-white shadow-xs'
                 : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
@@ -392,7 +392,7 @@ export const PaymentsPage: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('expenses')}
-            className={`py-2 px-4 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+            className={`py-2 px-3.5 sm:px-4 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               activeTab === 'expenses'
                 ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-xs'
                 : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
@@ -403,7 +403,7 @@ export const PaymentsPage: React.FC = () => {
         </div>
 
         {activeTab === 'payments' && (
-          <div className="flex bg-white/90 dark:bg-slate-900/90 p-1 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs gap-1 overflow-x-auto">
+          <div className="flex bg-white/90 dark:bg-slate-900/90 p-1 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs gap-1 overflow-x-auto scroll-touch max-w-full">
             {[
               { id: undefined, label: `📑 ${t('period.all', 'Barchasi')}` },
               { id: 5, label: `⏳ ${t('status.pending', 'Qisman')}` },
@@ -417,7 +417,7 @@ export const PaymentsPage: React.FC = () => {
                   setStatusFilter(tab.id as any);
                   setPage(1);
                 }}
-                className={`py-1.5 px-3 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap ${
+                className={`py-1.5 px-2.5 sm:px-3 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   statusFilter === tab.id
                     ? 'bg-slate-800 dark:bg-slate-700 text-white shadow-xs'
                     : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
@@ -455,158 +455,285 @@ export const PaymentsPage: React.FC = () => {
           ) : payments.length === 0 ? (
             <EmptyState title="To'lovlar topilmadi" description="Ushbu filter bo'yicha to'lov qaydlari mavjud emas." />
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                    <th className="py-3.5 px-5">{t('table.student', 'O‘quvchi')} & {t('table.group', 'Guruh')}</th>
-                    <th className="py-3.5 px-4">{t('table.amount', 'Kurs Narxi')}</th>
-                    <th className="py-3.5 px-4">{t('status.paid', 'To‘langan')} / {t('table.debt', 'Qarz')}</th>
-                    <th className="py-3.5 px-4">{t('dash.teachers_count', 'O‘qituvchi')} {t('teacher.share_percent', 'Ulushi')}</th>
-                    <th className="py-3.5 px-4">{t('teacher.due_date', 'Muddati')}</th>
-                    <th className="py-3.5 px-4">{t('table.status', 'Holat')}</th>
-                    <th className="py-3.5 px-5 text-right">{t('table.actions', 'Amallar')}</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
-                  {payments.map((p) => {
-                    const finalAmount = p.finalAmount || p.amount;
-                    const paidAmount = p.paidAmount ?? (p.status === 2 ? p.amount : 0);
-                    const debtAmount = p.debtAmount ?? Math.max(0, finalAmount - paidAmount);
-                    const teacherShare = p.teacherShareAmount ?? Math.round(paidAmount * 0.2);
+            <>
+              {/* Mobile / Tablet Responsive Cards View (< 1024px) */}
+              <div className="lg:hidden divide-y divide-slate-100 dark:divide-slate-800">
+                {payments.map((p) => {
+                  const finalAmount = p.finalAmount || p.amount;
+                  const paidAmount = p.paidAmount ?? (p.status === 2 ? p.amount : 0);
+                  const debtAmount = p.debtAmount ?? Math.max(0, finalAmount - paidAmount);
+                  const teacherShare = p.teacherShareAmount ?? Math.round(paidAmount * 0.2);
 
-                    return (
-                      <tr key={p.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition-colors">
-                        <td className="py-4 px-5">
-                          <strong className="text-slate-800 dark:text-white block text-xs">{p.studentName}</strong>
-                          <span className="text-[11px] text-slate-400 block">{p.groupName || 'Guruh biriktirilmagan'}</span>
-                          {p.studentPhone && <span className="text-[10px] text-slate-400">{p.studentPhone}</span>}
-                        </td>
-
-                        <td className="py-4 px-4">
-                          <div className="text-xs font-bold text-slate-800 dark:text-white">
-                            {finalAmount.toLocaleString()} UZS
-                          </div>
-                          {(p.discountPercent ?? 0) > 0 ? (
-                            <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-0.5">
-                              <Sparkles className="w-2.5 h-2.5" /> -{p.discountPercent}% chegirma
-                            </span>
-                          ) : (
-                            <span className="text-[10px] text-slate-400">Chegirmasiz</span>
+                  return (
+                    <div key={p.id} className="p-3.5 sm:p-4 space-y-3 hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
+                      {/* Top: Student Name + Status Badge */}
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <h4 className="font-bold text-sm text-slate-900 dark:text-white truncate">
+                            {p.studentName}
+                          </h4>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                            {p.groupName || 'Guruh biriktirilmagan'}
+                          </p>
+                          {p.studentPhone && (
+                            <p className="text-[11px] text-slate-400 mt-0.5">{p.studentPhone}</p>
                           )}
-                        </td>
-
-                        <td className="py-4 px-4">
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400">
-                              {paidAmount.toLocaleString()}
-                            </span>
-                            <span className="text-[10px] text-slate-400">/</span>
-                            <span className={`text-xs font-extrabold ${debtAmount > 0 ? 'text-red-500' : 'text-slate-400'}`}>
-                              {debtAmount > 0 ? `${debtAmount.toLocaleString()} qarz` : '0 qarz'}
-                            </span>
-                          </div>
-                          <span className="text-[10px] text-slate-400 block mt-0.5">
-                            {p.transactions && p.transactions.length > 0 ? `${p.transactions.length} ta to‘lov` : 'Bir martalik'}
-                          </span>
-                        </td>
-
-                        <td className="py-4 px-4">
-                          <span className="text-xs font-bold text-purple-600 dark:text-purple-300 block">
-                            {teacherShare.toLocaleString()} UZS
-                          </span>
-                          <span className="text-[10px] text-slate-500 dark:text-slate-400 block truncate max-w-[140px]" title={p.teacherName || 'Guruh o‘qituvchisi'}>
-                            {p.teacherName || 'Guruh o‘qituvchisi'} ({p.teacherSharePercent || 20}%)
-                          </span>
-                        </td>
-
-                        <td className="py-4 px-4 text-slate-600 dark:text-slate-400">
-                          {new Date(p.dueDate).toLocaleDateString()}
-                        </td>
-
-                        <td className="py-4 px-4">
-                          <Badge
-                            variant={
-                              debtAmount <= 0
-                                ? 'success'
-                                : (p.paidAmount || 0) > 0
-                                ? 'info'
-                                : p.status === 3
-                                ? 'danger'
-                                : 'warning'
-                            }
-                          >
-                            {debtAmount <= 0
-                              ? 'To‘langan'
+                        </div>
+                        <Badge
+                          variant={
+                            debtAmount <= 0
+                              ? 'success'
                               : (p.paidAmount || 0) > 0
-                              ? 'Qisman (Kutilmoqda)'
+                              ? 'info'
                               : p.status === 3
-                              ? 'Qarzdor'
-                              : 'Kutilmoqda'}
-                          </Badge>
-                        </td>
+                              ? 'danger'
+                              : 'warning'
+                          }
+                        >
+                          {debtAmount <= 0
+                            ? 'To‘langan'
+                            : (p.paidAmount || 0) > 0
+                            ? 'Qisman (Kutilmoqda)'
+                            : p.status === 3
+                            ? 'Qarzdor'
+                            : 'Kutilmoqda'}
+                        </Badge>
+                      </div>
 
-                        <td className="py-4 px-5 text-right space-x-1.5 whitespace-nowrap">
-                          {debtAmount > 0 ? (
-                            <>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setSelectedPayment(p);
-                                  setPartialAmount(debtAmount > 0 ? debtAmount : 100000);
-                                  setPartialNextDueDate(p.dueDate ? p.dueDate.split('T')[0] : '');
-                                  setIsPartialModalOpen(true);
-                                }}
-                                title="Bo‘lib to‘lash / Tranzaksiya qo‘shish"
-                                className="px-2.5 py-1.5 bg-blue-50 dark:bg-blue-950/60 text-[#0050cb] dark:text-blue-300 hover:bg-blue-100 font-bold rounded-lg text-xs transition-colors inline-flex items-center gap-1 cursor-pointer"
-                              >
-                                <Wallet className="w-3.5 h-3.5" />
-                                <span>Bo‘lib to‘lash</span>
-                              </button>
+                      {/* 3-Column Financial Stats Bar */}
+                      <div className="grid grid-cols-3 gap-2 bg-slate-50/80 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-700/60 text-center">
+                        <div>
+                          <span className="text-[10px] text-slate-400 font-semibold block uppercase">Kurs Narxi</span>
+                          <span className="text-xs font-bold text-slate-800 dark:text-white block mt-0.5">
+                            {finalAmount.toLocaleString()} UZS
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold block uppercase">To‘langan</span>
+                          <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 block mt-0.5">
+                            {paidAmount.toLocaleString()} UZS
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-[10px] text-red-500 font-semibold block uppercase">Qarz</span>
+                          <span className={`text-xs font-bold block mt-0.5 ${debtAmount > 0 ? 'text-red-500' : 'text-slate-400'}`}>
+                            {debtAmount > 0 ? `${debtAmount.toLocaleString()} UZS` : '0'}
+                          </span>
+                        </div>
+                      </div>
 
-                              <button
-                                type="button"
-                                onClick={() => openPromiseModal(p)}
-                                title="Va’da qilingan to‘lov kunini belgilash"
-                                className="px-2.5 py-1.5 bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 hover:bg-purple-100 font-bold rounded-lg text-xs transition-colors inline-flex items-center gap-1 cursor-pointer"
-                              >
-                                <Calendar className="w-3.5 h-3.5" />
-                                <span>Kun belgilash</span>
-                              </button>
+                      {/* Meta Information */}
+                      <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 pt-0.5">
+                        <span>Muddati: <strong className="text-slate-700 dark:text-slate-300">{new Date(p.dueDate).toLocaleDateString()}</strong></span>
+                        <span>O‘qituvchi ulushi: <strong className="text-purple-600 dark:text-purple-300">{teacherShare.toLocaleString()} UZS</strong></span>
+                      </div>
 
-                              <button
-                                type="button"
-                                onClick={() => handleSendSmsReminder(p.id, p.studentName)}
-                                disabled={sendingSmsId === p.id}
-                                title="O‘quvchi va ota-onaga eslatma SMS yuborish"
-                                className="px-2.5 py-1.5 bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 hover:bg-amber-100 font-bold rounded-lg text-xs transition-colors inline-flex items-center gap-1 cursor-pointer disabled:opacity-50"
-                              >
-                                <Send className="w-3.5 h-3.5" />
-                                <span>{sendingSmsId === p.id ? 'Yuborilmoqda...' : 'SMS'}</span>
-                              </button>
+                      {/* Action Buttons Grid */}
+                      {debtAmount > 0 ? (
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 pt-1">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedPayment(p);
+                              setPartialAmount(debtAmount > 0 ? debtAmount : 100000);
+                              setPartialNextDueDate(p.dueDate ? p.dueDate.split('T')[0] : '');
+                              setIsPartialModalOpen(true);
+                            }}
+                            className="px-2 py-2 bg-blue-50 dark:bg-blue-950/60 text-[#0050cb] dark:text-blue-300 hover:bg-blue-100 font-bold rounded-xl text-xs transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                          >
+                            <Wallet className="w-3.5 h-3.5" />
+                            <span>Bo‘lib to‘lash</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => openPromiseModal(p)}
+                            className="px-2 py-2 bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 hover:bg-purple-100 font-bold rounded-xl text-xs transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                          >
+                            <Calendar className="w-3.5 h-3.5" />
+                            <span>Kun belgilash</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleSendSmsReminder(p.id, p.studentName)}
+                            disabled={sendingSmsId === p.id}
+                            className="px-2 py-2 bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 hover:bg-amber-100 font-bold rounded-xl text-xs transition-colors flex items-center justify-center gap-1 cursor-pointer disabled:opacity-50"
+                          >
+                            <Send className="w-3.5 h-3.5" />
+                            <span>{sendingSmsId === p.id ? 'Yuborilmoqda...' : 'SMS'}</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleMarkAsPaid(p.id)}
+                            className="px-2 py-2 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 font-bold rounded-xl text-xs transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                          >
+                            <Check className="w-3.5 h-3.5" />
+                            <span>Yopish</span>
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 pt-1">
+                          <CheckCircle2 className="w-3.5 h-3.5" /> To‘liq yopilgan
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
 
-                              <button
-                                type="button"
-                                onClick={() => handleMarkAsPaid(p.id)}
-                                title="To‘liq to‘landi deb belgilash"
-                                className="px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 font-bold rounded-lg text-xs transition-colors inline-flex items-center gap-1 cursor-pointer"
-                              >
-                                <Check className="w-3.5 h-3.5" />
-                                <span>Yopish</span>
-                              </button>
-                            </>
-                          ) : (
-                            <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 inline-flex items-center gap-1">
-                              <CheckCircle2 className="w-3.5 h-3.5" /> To‘liq yopilgan
+              {/* Desktop Full Table View (>= 1024px) */}
+              <div className="hidden lg:block overflow-x-auto scroll-touch">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-[11px] 3xl:text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                      <th className="py-3.5 px-4 sm:px-5">{t('table.student', 'O‘quvchi')} & {t('table.group', 'Guruh')}</th>
+                      <th className="py-3.5 px-3 sm:px-4">{t('table.amount', 'Kurs Narxi')}</th>
+                      <th className="py-3.5 px-3 sm:px-4">{t('status.paid', 'To‘langan')} / {t('table.debt', 'Qarz')}</th>
+                      <th className="py-3.5 px-3 sm:px-4">{t('dash.teachers_count', 'O‘qituvchi')} {t('teacher.share_percent', 'Ulushi')}</th>
+                      <th className="py-3.5 px-3 sm:px-4">{t('teacher.due_date', 'Muddati')}</th>
+                      <th className="py-3.5 px-3 sm:px-4">{t('table.status', 'Holat')}</th>
+                      <th className="py-3.5 px-4 sm:px-5 text-right">{t('table.actions', 'Amallar')}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs 3xl:text-sm">
+                    {payments.map((p) => {
+                      const finalAmount = p.finalAmount || p.amount;
+                      const paidAmount = p.paidAmount ?? (p.status === 2 ? p.amount : 0);
+                      const debtAmount = p.debtAmount ?? Math.max(0, finalAmount - paidAmount);
+                      const teacherShare = p.teacherShareAmount ?? Math.round(paidAmount * 0.2);
+
+                      return (
+                        <tr key={p.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition-colors">
+                          <td className="py-4 px-4 sm:px-5">
+                            <strong className="text-slate-800 dark:text-white block text-xs 3xl:text-sm">{p.studentName}</strong>
+                            <span className="text-[11px] 3xl:text-xs text-slate-400 block">{p.groupName || 'Guruh biriktirilmagan'}</span>
+                            {p.studentPhone && <span className="text-[10px] 3xl:text-xs text-slate-400">{p.studentPhone}</span>}
+                          </td>
+
+                          <td className="py-4 px-3 sm:px-4">
+                            <div className="text-xs 3xl:text-sm font-bold text-slate-800 dark:text-white">
+                              {finalAmount.toLocaleString()} UZS
+                            </div>
+                            {(p.discountPercent ?? 0) > 0 ? (
+                              <span className="text-[10px] 3xl:text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-0.5">
+                                <Sparkles className="w-2.5 h-2.5" /> -{p.discountPercent}% chegirma
+                              </span>
+                            ) : (
+                              <span className="text-[10px] 3xl:text-xs text-slate-400">Chegirmasiz</span>
+                            )}
+                          </td>
+
+                          <td className="py-4 px-3 sm:px-4">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-xs 3xl:text-sm font-extrabold text-emerald-600 dark:text-emerald-400">
+                                {paidAmount.toLocaleString()}
+                              </span>
+                              <span className="text-[10px] text-slate-400">/</span>
+                              <span className={`text-xs 3xl:text-sm font-extrabold ${debtAmount > 0 ? 'text-red-500' : 'text-slate-400'}`}>
+                                {debtAmount > 0 ? `${debtAmount.toLocaleString()} qarz` : '0 qarz'}
+                              </span>
+                            </div>
+                            <span className="text-[10px] 3xl:text-xs text-slate-400 block mt-0.5">
+                              {p.transactions && p.transactions.length > 0 ? `${p.transactions.length} ta to‘lov` : 'Bir martalik'}
                             </span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                          </td>
+
+                          <td className="py-4 px-3 sm:px-4">
+                            <span className="text-xs 3xl:text-sm font-bold text-purple-600 dark:text-purple-300 block">
+                              {teacherShare.toLocaleString()} UZS
+                            </span>
+                            <span className="text-[10px] 3xl:text-xs text-slate-500 dark:text-slate-400 block truncate max-w-[140px]" title={p.teacherName || 'Guruh o‘qituvchisi'}>
+                              {p.teacherName || 'Guruh o‘qituvchisi'} ({p.teacherSharePercent || 20}%)
+                            </span>
+                          </td>
+
+                          <td className="py-4 px-3 sm:px-4 text-slate-600 dark:text-slate-400">
+                            {new Date(p.dueDate).toLocaleDateString()}
+                          </td>
+
+                          <td className="py-4 px-3 sm:px-4">
+                            <Badge
+                              variant={
+                                debtAmount <= 0
+                                  ? 'success'
+                                  : (p.paidAmount || 0) > 0
+                                  ? 'info'
+                                  : p.status === 3
+                                  ? 'danger'
+                                  : 'warning'
+                              }
+                            >
+                              {debtAmount <= 0
+                                ? 'To‘langan'
+                                : (p.paidAmount || 0) > 0
+                                ? 'Qisman (Kutilmoqda)'
+                                : p.status === 3
+                                ? 'Qarzdor'
+                                : 'Kutilmoqda'}
+                            </Badge>
+                          </td>
+
+                          <td className="py-4 px-5 text-right space-x-1.5 whitespace-nowrap">
+                            {debtAmount > 0 ? (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedPayment(p);
+                                    setPartialAmount(debtAmount > 0 ? debtAmount : 100000);
+                                    setPartialNextDueDate(p.dueDate ? p.dueDate.split('T')[0] : '');
+                                    setIsPartialModalOpen(true);
+                                  }}
+                                  title="Bo‘lib to‘lash / Tranzaksiya qo‘shish"
+                                  className="px-2.5 py-1.5 bg-blue-50 dark:bg-blue-950/60 text-[#0050cb] dark:text-blue-300 hover:bg-blue-100 font-bold rounded-lg text-xs transition-colors inline-flex items-center gap-1 cursor-pointer"
+                                >
+                                  <Wallet className="w-3.5 h-3.5" />
+                                  <span>Bo‘lib to‘lash</span>
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() => openPromiseModal(p)}
+                                  title="Va’da qilingan to‘lov kunini belgilash"
+                                  className="px-2.5 py-1.5 bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 hover:bg-purple-100 font-bold rounded-lg text-xs transition-colors inline-flex items-center gap-1 cursor-pointer"
+                                >
+                                  <Calendar className="w-3.5 h-3.5" />
+                                  <span>Kun belgilash</span>
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() => handleSendSmsReminder(p.id, p.studentName)}
+                                  disabled={sendingSmsId === p.id}
+                                  title="O‘quvchi va ota-onaga eslatma SMS yuborish"
+                                  className="px-2.5 py-1.5 bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 hover:bg-amber-100 font-bold rounded-lg text-xs transition-colors inline-flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                                >
+                                  <Send className="w-3.5 h-3.5" />
+                                  <span>{sendingSmsId === p.id ? 'Yuborilmoqda...' : 'SMS'}</span>
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() => handleMarkAsPaid(p.id)}
+                                  title="To‘liq to‘landi deb belgilash"
+                                  className="px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 font-bold rounded-lg text-xs transition-colors inline-flex items-center gap-1 cursor-pointer"
+                                >
+                                  <Check className="w-3.5 h-3.5" />
+                                  <span>Yopish</span>
+                                </button>
+                              </>
+                            ) : (
+                              <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 inline-flex items-center gap-1">
+                                <CheckCircle2 className="w-3.5 h-3.5" /> To‘liq yopilgan
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
 
           <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
@@ -617,48 +744,84 @@ export const PaymentsPage: React.FC = () => {
           {expenses.length === 0 ? (
             <EmptyState title="Xarajatlar mavjud emas" description="Hozircha markaz xarajatlari kiritilmagan." />
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                    <th className="py-3.5 px-5">Kategoriya</th>
-                    <th className="py-3.5 px-4">Summa</th>
-                    <th className="py-3.5 px-4">Sana</th>
-                    <th className="py-3.5 px-4">Izoh</th>
-                    <th className="py-3.5 px-5 text-right">Amal</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
-                  {expenses.map((e) => (
-                    <tr key={e.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition-colors">
-                      <td className="py-4 px-5 font-bold text-slate-800 dark:text-white">
-                        {e.category}
-                      </td>
-                      <td className="py-4 px-4 font-extrabold text-red-500">
+            <>
+              {/* Mobile / Tablet Responsive Cards for Expenses (< 1024px) */}
+              <div className="lg:hidden divide-y divide-slate-100 dark:divide-slate-800">
+                {expenses.map((e) => (
+                  <div key={e.id} className="p-3.5 sm:p-4 space-y-2 hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <h4 className="font-bold text-sm text-slate-800 dark:text-white">{e.category}</h4>
+                        <p className="text-xs text-slate-400 mt-0.5">{new Date(e.expenseDate).toLocaleDateString()}</p>
+                      </div>
+                      <span className="text-sm font-extrabold text-red-500">
                         -{e.amount.toLocaleString()} UZS
-                      </td>
-                      <td className="py-4 px-4 text-slate-500 dark:text-slate-400">
-                        {new Date(e.expenseDate).toLocaleDateString()}
-                      </td>
-                      <td className="py-4 px-4 text-slate-600 dark:text-slate-300">
-                        {e.description || '—'}
-                      </td>
-                      <td className="py-4 px-5 text-right">
-                        <button
-                          onClick={async () => {
-                            await financeApi.deleteExpense(e.id);
-                            fetchPayments();
-                          }}
-                          className="text-xs text-red-500 hover:text-red-700 font-bold cursor-pointer"
-                        >
-                          O‘chirish
-                        </button>
-                      </td>
+                      </span>
+                    </div>
+                    {e.description && (
+                      <p className="text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg">
+                        {e.description}
+                      </p>
+                    )}
+                    <div className="flex justify-end pt-1">
+                      <button
+                        onClick={async () => {
+                          await financeApi.deleteExpense(e.id);
+                          fetchPayments();
+                        }}
+                        className="px-3 py-1.5 text-xs text-red-500 hover:text-red-700 font-bold bg-red-50 dark:bg-red-950/50 rounded-xl transition-colors cursor-pointer"
+                      >
+                        O‘chirish
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop Full Table for Expenses (>= 1024px) */}
+              <div className="hidden lg:block overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                      <th className="py-3.5 px-5">Kategoriya</th>
+                      <th className="py-3.5 px-4">Summa</th>
+                      <th className="py-3.5 px-4">Sana</th>
+                      <th className="py-3.5 px-4">Izoh</th>
+                      <th className="py-3.5 px-5 text-right">Amal</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+                    {expenses.map((e) => (
+                      <tr key={e.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition-colors">
+                        <td className="py-4 px-5 font-bold text-slate-800 dark:text-white">
+                          {e.category}
+                        </td>
+                        <td className="py-4 px-4 font-extrabold text-red-500">
+                          -{e.amount.toLocaleString()} UZS
+                        </td>
+                        <td className="py-4 px-4 text-slate-500 dark:text-slate-400">
+                          {new Date(e.expenseDate).toLocaleDateString()}
+                        </td>
+                        <td className="py-4 px-4 text-slate-600 dark:text-slate-300">
+                          {e.description || '—'}
+                        </td>
+                        <td className="py-4 px-5 text-right">
+                          <button
+                            onClick={async () => {
+                              await financeApi.deleteExpense(e.id);
+                              fetchPayments();
+                            }}
+                            className="text-xs text-red-500 hover:text-red-700 font-bold cursor-pointer"
+                          >
+                            O‘chirish
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </div>
       )}

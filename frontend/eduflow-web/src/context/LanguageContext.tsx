@@ -49,11 +49,13 @@ const translations: Record<Language, Record<string, string>> = {
     'role.user': 'Foydalanuvchi',
 
     // Header & Common
-    'header.search': 'Qidirish (Ctrl + K)...',
+    'header.search_placeholder': 'Qidirish...',
+    'header.search': 'Qidirish',
     'header.quick_add': 'Qo‘shish',
     'header.new_student': 'Yangi O‘quvchi',
     'header.new_teacher': 'Yangi O‘qituvchi',
     'header.new_group': 'Yangi Guruh',
+    'header.teacher_attendance': 'O‘qituvchilar Davomati',
     'header.take_attendance': 'Davomat Qilish',
     'header.new_lead': 'Yangi Lid (CRM)',
     'header.logout': 'Chiqish',
@@ -545,6 +547,68 @@ const translations: Record<Language, Record<string, string>> = {
     'profile.role_label': 'Tizimdagi rolingiz',
     'profile.theme_label': 'Interfeys mavzusi',
     'profile.lang_label': 'Tizim tili',
+
+    // Auth & Logout
+    'auth.logout_confirm_title': 'Tizimdan chiqishni xohlaysizmi?',
+    'auth.logout_confirm_desc': 'Joriy sessiyangiz yakunlanadi. Qayta kirish uchun login va parolingizni kiritishingiz kerak bo‘ladi.',
+    'auth.logout_btn': 'Ha, chiqish',
+    'auth.logout_success': 'Siz tizimdan muvaffaqiyatli chiqdingiz!',
+    'auth.danger_zone_title': 'Sessiyani yakunlash / Chiqish',
+    'auth.danger_zone_desc': 'Akkauntingizdan xavfsiz chiqish va joriy qurilmadagi sessiyani to‘xtatish.',
+
+    // Student Payment & Block Status
+    'students.payment_blocked': 'Darsga kiritilmaydi',
+    'students.paid_until': 'gacha to‘langan',
+    'students.filter_all': 'Barcha o‘quvchilar',
+    'students.filter_blocked': '🚫 Faqat bloklanganlar (To‘lov muddati o‘tgan)',
+    'students.filter_active': '✅ Faqat faollar (Ruxsat etilganlar)',
+    'students.block_student': 'Bloklash (Darsga kiritmaslik)',
+    'students.unblock_student': 'Blokdan chiqarish (Darsga ruxsat)',
+    'students.confirm_block': 'ni to‘lov muddati o‘tganligi sababli bloklamoqchimisiz?',
+    'students.confirm_unblock': 'ni blokdan chiqarib, darslarga qatnashishiga ruxsat bermoqchimisiz?',
+    'students.blocked_success': 'muvaffaqiyatli bloklandi (Darsga kiritilmaydi).',
+    'students.unblocked_success': 'blokdan chiqarildi (Darsga ruxsat etildi).',
+
+    // Teacher Salary Models
+    'teachers.salary_model_label': 'Oylik to‘lov shartnomasi (Maosh modeli)',
+    'teachers.salary_model_desc': 'O‘quv markazi ma’muri nazoratida',
+    'teachers.fixed_salary': 'Qat‘iy oylik (Fixed)',
+    'teachers.fixed_salary_desc': 'Belgilangan aniq summa (masalan: 5,000,000 yoki 6,000,000 UZS).',
+    'teachers.percentage_share': 'Foizli ulush (Share)',
+    'teachers.percentage_share_desc': 'Faqat o‘ziga biriktirilgan guruhlar to‘lovidan belgilangan foiz (masalan 50% yoki 40%).',
+    'teachers.fixed_amount_label': 'Qat‘iy oylik maosh summasi (UZS)',
+    'teachers.share_percent_label': 'O‘qituvchi ulushi foizi (%)',
+    'teachers.contract_badge_fixed': 'Qat‘iy',
+    'teachers.contract_badge_share': 'Ulush',
+    'teachers.excused_deduction_label': 'Sababli qoldirilgan darslar chegirmasi',
+    'teachers.assign_group_title': 'ga guruh biriktirish',
+    'teachers.assign_group_desc': 'Markazdagi mavjud guruhlardan birini tanlang. Guruh ushbu o‘qituvchiga biriktiriladi.',
+
+    // Attendance Alerts & Labels
+    'attendance.saved_title': 'Davomat muvaffaqiyatli saqlandi va markaz ma’muriyatiga yuborildi!',
+    'attendance.blocked_students_warning': 'To‘lov muddati o‘tgan o‘quvchilar mavjud',
+    'attendance.blocked_students_sub': 'Qizil hoshiya bilan belgilangan o‘quvchilarning oylik to‘lov muddati tugagan. Ular to‘lov qilmaguncha darsga kiritilmasin!',
+    'attendance.mark_tab': 'Davomat belgilash',
+    'attendance.history_tab': 'Guruh jurnali (Tarix)',
+    'attendance.not_admitted': 'Darsga kiritilmaydi (To‘lov muddati o‘tgan)',
+    'attendance.status_present': 'Kelgan',
+    'attendance.status_absent': 'Kelmagan',
+    'attendance.status_late': 'Kechikkan',
+    'attendance.status_excused': 'Sababli',
+
+    // Promotional Announcements
+    'promo.friend_title': 'Maxsus Aksiya: Do‘stlaringizni taklif qiling!',
+    'promo.friend_desc': 'O‘zingiz bilan yana 2 ta do‘stingizni o‘quv markazimizga olib kelsangiz, keyingi oylik to‘lovingiz uchun 20% maxsus chegirmaga ega bo‘lasiz!',
+    'promo.mark_read': 'O‘qidim / Tushundim',
+    'promo.badge_discount': 'Chegirma 20%',
+    'promo.special_offer': 'Maxsus Aksiya',
+
+    // Navigation & Mobile
+    'nav.menu': 'Menyu',
+    'nav.monitoring': 'Monitoring',
+    'nav.tenants': 'Markazlar',
+    'nav.plans': 'Rejalar',
+    'nav.logs': 'Loglar',
   },
   RU: {
     // Nav
@@ -585,11 +649,13 @@ const translations: Record<Language, Record<string, string>> = {
     'role.user': 'Пользователь',
 
     // Header & Common
-    'header.search': 'Поиск (Ctrl + K)...',
+    'header.search_placeholder': 'Поиск...',
+    'header.search': 'Поиск',
     'header.quick_add': 'Добавить',
-    'header.new_student': 'Новый студент',
-    'header.new_teacher': 'Новый преподаватель',
+    'header.new_student': 'Новый ученик',
+    'header.new_teacher': 'Новый учитель',
     'header.new_group': 'Новая группа',
+    'header.teacher_attendance': 'Посещаемость учителей',
     'header.take_attendance': 'Отметить посещаемость',
     'header.new_lead': 'Новый лид (CRM)',
     'header.logout': 'Выйти',
@@ -1081,6 +1147,68 @@ const translations: Record<Language, Record<string, string>> = {
     'profile.role_label': 'Ваша роль в системе',
     'profile.theme_label': 'Тема оформления',
     'profile.lang_label': 'Язык интерфейса',
+
+    // Auth & Logout
+    'auth.logout_confirm_title': 'Вы действительно хотите выйти?',
+    'auth.logout_confirm_desc': 'Текущий сеанс будет завершен. Для повторного входа потребуется ввести логин и пароль.',
+    'auth.logout_btn': 'Да, выйти',
+    'auth.logout_success': 'Вы успешно вышли из системы!',
+    'auth.danger_zone_title': 'Завершение сеанса / Выход',
+    'auth.danger_zone_desc': 'Безопасный выход из учетной записи на текущем устройстве.',
+
+    // Student Payment & Block Status
+    'students.payment_blocked': 'Не допускается к занятиям',
+    'students.paid_until': 'оплачено до',
+    'students.filter_all': 'Все студенты',
+    'students.filter_blocked': '🚫 Только заблокированные (Истек срок оплаты)',
+    'students.filter_active': '✅ Только активные (Допущенные)',
+    'students.block_student': 'Заблокировать (Запретить вход на уроки)',
+    'students.unblock_student': 'Разблокировать (Разрешить занятия)',
+    'students.confirm_block': 'заблокировать из-за просроченной оплаты?',
+    'students.confirm_unblock': 'разблокировать и разрешить посещение уроков?',
+    'students.blocked_success': 'успешно заблокирован(а) (не допускается к занятиям).',
+    'students.unblocked_success': 'успешно разблокирован(а) (допущен к занятиям).',
+
+    // Teacher Salary Models
+    'teachers.salary_model_label': 'Договор оплаты труда (Модель зарплаты)',
+    'teachers.salary_model_desc': 'Под контролем администратора центра',
+    'teachers.fixed_salary': 'Фиксированный оклад (Fixed)',
+    'teachers.fixed_salary_desc': 'Установленная точная сумма (например: 5 000 000 или 6 000 000 сум).',
+    'teachers.percentage_share': 'Процентная доля (Share)',
+    'teachers.percentage_share_desc': 'Установленный процент только от платежей своих закрепленных групп (например 50% или 40%).',
+    'teachers.fixed_amount_label': 'Сумма фиксированного оклада (UZS)',
+    'teachers.share_percent_label': 'Процент доли преподавателя (%)',
+    'teachers.contract_badge_fixed': 'Оклад',
+    'teachers.contract_badge_share': 'Доля',
+    'teachers.excused_deduction_label': 'Вычет за пропуски по уважительной причине',
+    'teachers.assign_group_title': 'прикрепить группу',
+    'teachers.assign_group_desc': 'Выберите группу учебного центра для закрепления за этим преподавателем.',
+
+    // Attendance Alerts & Labels
+    'attendance.saved_title': 'Посещаемость успешно сохранена и отправлена руководству центра!',
+    'attendance.blocked_students_warning': 'Есть студенты с истекшим сроком оплаты',
+    'attendance.blocked_students_sub': 'Студенты, выделенные красной рамкой, не оплатили текущий месяц. Не допускайте их к уроку до оплаты!',
+    'attendance.mark_tab': 'Отметить посещаемость',
+    'attendance.history_tab': 'Журнал группы (История)',
+    'attendance.not_admitted': 'Не допускается к занятиям (Просрочена оплата)',
+    'attendance.status_present': 'Присутствовал',
+    'attendance.status_absent': 'Отсутствовал',
+    'attendance.status_late': 'Опоздал',
+    'attendance.status_excused': 'Уважительная',
+
+    // Promotional Announcements
+    'promo.friend_title': 'Специальная акция: Приведи друзей!',
+    'promo.friend_desc': 'Приведите с собой 2 друзей в наш учебный центр и получите специальную скидку 20% на следующий месяц обучения!',
+    'promo.mark_read': 'Прочитано / Понятно',
+    'promo.badge_discount': 'Скидка 20%',
+    'promo.special_offer': 'Специальная акция',
+
+    // Navigation & Mobile
+    'nav.menu': 'Меню',
+    'nav.monitoring': 'Мониторинг',
+    'nav.tenants': 'Центры',
+    'nav.plans': 'Тарифы',
+    'nav.logs': 'Журнал логов',
   },
   EN: {
     // Nav
@@ -1121,11 +1249,13 @@ const translations: Record<Language, Record<string, string>> = {
     'role.user': 'User',
 
     // Header & Common
-    'header.search': 'Search (Ctrl + K)...',
+    'header.search_placeholder': 'Search...',
+    'header.search': 'Search',
     'header.quick_add': 'Quick Add',
     'header.new_student': 'New Student',
     'header.new_teacher': 'New Teacher',
     'header.new_group': 'New Group',
+    'header.teacher_attendance': 'Teacher Attendance',
     'header.take_attendance': 'Take Attendance',
     'header.new_lead': 'New Lead (CRM)',
     'header.logout': 'Sign Out',
@@ -1617,6 +1747,68 @@ const translations: Record<Language, Record<string, string>> = {
     'profile.role_label': 'Your system role',
     'profile.theme_label': 'Interface Theme',
     'profile.lang_label': 'System Language',
+
+    // Auth & Logout
+    'auth.logout_confirm_title': 'Are you sure you want to log out?',
+    'auth.logout_confirm_desc': 'Your active session will be ended. You will need to enter your username and password to log in again.',
+    'auth.logout_btn': 'Yes, log out',
+    'auth.logout_success': 'You have successfully logged out!',
+    'auth.danger_zone_title': 'End Session / Logout',
+    'auth.danger_zone_desc': 'Safely log out of your account and terminate the current session on this device.',
+
+    // Student Payment & Block Status
+    'students.payment_blocked': 'Access Denied (Overdue)',
+    'students.paid_until': 'Paid until',
+    'students.filter_all': 'All Students',
+    'students.filter_blocked': '🚫 Blocked Only (Overdue Tuition)',
+    'students.filter_active': '✅ Active Only (Allowed)',
+    'students.block_student': 'Block Student (Deny Access)',
+    'students.unblock_student': 'Unblock Student (Allow Access)',
+    'students.confirm_block': 'Are you sure you want to block this student due to overdue payment?',
+    'students.confirm_unblock': 'Are you sure you want to unblock this student and restore access to lessons?',
+    'students.blocked_success': 'successfully blocked (access denied).',
+    'students.unblocked_success': 'successfully unblocked (access allowed).',
+
+    // Teacher Salary Models
+    'teachers.salary_model_label': 'Salary Model (Compensation Contract)',
+    'teachers.salary_model_desc': 'Controlled by education center management',
+    'teachers.fixed_salary': 'Fixed Monthly Salary',
+    'teachers.fixed_salary_desc': 'Guaranteed fixed sum per month (e.g., 5,000,000 UZS).',
+    'teachers.percentage_share': 'Percentage Revenue Share',
+    'teachers.percentage_share_desc': 'Designated share of tuition paid by assigned groups (e.g. 50% or 40%).',
+    'teachers.fixed_amount_label': 'Fixed Monthly Base Salary (UZS)',
+    'teachers.share_percent_label': 'Teacher Share Percentage (%)',
+    'teachers.contract_badge_fixed': 'Fixed',
+    'teachers.contract_badge_share': 'Share',
+    'teachers.excused_deduction_label': 'Excused Absence Tuition Deduction',
+    'teachers.assign_group_title': 'Assign Group to Teacher',
+    'teachers.assign_group_desc': 'Select an active group from the center. The group will be assigned to this teacher.',
+
+    // Attendance Alerts & Labels
+    'attendance.saved_title': 'Attendance successfully saved and forwarded to administration!',
+    'attendance.blocked_students_warning': 'Students with Overdue Payments Detected',
+    'attendance.blocked_students_sub': 'Students highlighted in red border have expired tuition. They must not be admitted to class until payment is cleared!',
+    'attendance.mark_tab': 'Mark Attendance',
+    'attendance.history_tab': 'Group Journal (History)',
+    'attendance.not_admitted': 'Access Denied (Overdue Tuition)',
+    'attendance.status_present': 'Present',
+    'attendance.status_absent': 'Absent',
+    'attendance.status_late': 'Late',
+    'attendance.status_excused': 'Excused',
+
+    // Promotional Announcements
+    'promo.friend_title': 'Special Campaign: Invite Your Friends!',
+    'promo.friend_desc': 'Bring 2 friends to our learning center and receive a 20% discount on your next monthly tuition!',
+    'promo.mark_read': 'Mark as Read / Understood',
+    'promo.badge_discount': '20% Discount',
+    'promo.special_offer': 'Special Offer',
+
+    // Navigation & Mobile
+    'nav.menu': 'Menu',
+    'nav.monitoring': 'Monitoring',
+    'nav.tenants': 'Centers',
+    'nav.plans': 'Plans',
+    'nav.logs': 'Logs',
   },
 };
 

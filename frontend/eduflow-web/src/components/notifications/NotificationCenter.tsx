@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Bell, Megaphone, Sparkles, Clock, X, CheckCheck } from 'lucide-react';
 
+import { PROMO_STORAGE_KEY, CURRENT_PROMO_ID } from '../common/PromotionBanner';
+import { useLanguage } from '../../context/LanguageContext';
+
 interface AdNotificationItem {
   id: string;
   title: string;
@@ -12,39 +15,68 @@ interface AdNotificationItem {
 }
 
 export const NotificationCenter: React.FC = () => {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Faqat reklama, aksiyalar va markaz e'lonlari uchun
-  const [notifications, setNotifications] = useState<AdNotificationItem[]>([
-    {
-      id: 'ad-1',
-      title: 'Yangi mavsum aksiyasi — 20% chegirma!',
-      message: "Dasturlash va til kurslariga ro‘yxatdan o‘ting va birinchi oy to‘loviga 20% maxsus chegirmaga ega bo‘ling!",
-      time: 'Yangi',
-      isRead: false,
-      type: 'promo',
-      badge: 'Aksiya',
-    },
-    {
-      id: 'ad-2',
-      title: "Bepul Masterclass: IT sohasiga kirish",
-      message: "Ushbu yakshanba kuni soat 15:00 da tajribali mutaxassislar bilan bepul ochiq masterclass bo‘lib o‘tadi.",
-      time: '1 kun oldin',
-      isRead: false,
-      type: 'announcement',
-      badge: 'Eʼlon',
-    },
-  ]);
+  const [notifications, setNotifications] = useState<AdNotificationItem[]>(() => {
+    let isPromoRead = false;
+    try {
+      const readPromotions = JSON.parse(localStorage.getItem(PROMO_STORAGE_KEY) || '[]');
+      if (readPromotions.includes(CURRENT_PROMO_ID)) {
+        isPromoRead = true;
+      }
+    } catch {
+      isPromoRead = false;
+    }
+
+    return [
+      {
+        id: CURRENT_PROMO_ID,
+        title: 'Maxsus Aksiya: Do‘stlaringizni taklif qiling!',
+        message: "O‘zingiz bilan yana 2 ta do‘stingizni o‘quv markazimizga olib kelsangiz, keyingi oylik to‘lovingiz uchun 20% maxsus chegirmaga ega bo‘lasiz!",
+        time: 'Yangi',
+        isRead: isPromoRead,
+        type: 'promo',
+        badge: 'Aksiya 20%',
+      },
+      {
+        id: 'ad-2',
+        title: "Bepul Masterclass: IT sohasiga kirish",
+        message: "Ushbu yakshanba kuni soat 15:00 da tajribali mutaxassislar bilan bepul ochiq masterclass bo‘lib o‘tadi.",
+        time: '1 kun oldin',
+        isRead: false,
+        type: 'announcement',
+        badge: 'Eʼlon',
+      },
+    ];
+  });
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   const markAllRead = () => {
+    try {
+      const readPromotions: string[] = JSON.parse(localStorage.getItem(PROMO_STORAGE_KEY) || '[]');
+      if (!readPromotions.includes(CURRENT_PROMO_ID)) {
+        readPromotions.push(CURRENT_PROMO_ID);
+        localStorage.setItem(PROMO_STORAGE_KEY, JSON.stringify(readPromotions));
+      }
+    } catch {}
     setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
   };
 
   const removeNotification = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
+    if (id === CURRENT_PROMO_ID) {
+      try {
+        const readPromotions: string[] = JSON.parse(localStorage.getItem(PROMO_STORAGE_KEY) || '[]');
+        if (!readPromotions.includes(CURRENT_PROMO_ID)) {
+          readPromotions.push(CURRENT_PROMO_ID);
+          localStorage.setItem(PROMO_STORAGE_KEY, JSON.stringify(readPromotions));
+        }
+      } catch {}
+    }
     setNotifications((prev) => prev.filter((n) => n.id !== id));
   };
 

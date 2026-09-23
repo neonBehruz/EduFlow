@@ -53,31 +53,61 @@ public class TeacherPayrollService : ITeacherPayrollService
                         p.Status == PaymentStatus.Paid)
             .ToListAsync();
 
+        var lessonIds = lessons.Select(l => l.Id).ToList();
+
+        // 2. Attendance breakdown for teacher's lessons: Excused vs Absent/Present
+        var attendances = await _context.Attendances
+            .AsNoTracking()
+            .Where(a => lessonIds.Contains(a.LessonId))
+            .ToListAsync();
+
+        int presentCount = attendances.Count(a => a.Status == AttendanceStatus.Present || a.Status == AttendanceStatus.Late);
+        int absentWithoutExcuseCount = attendances.Count(a => a.Status == AttendanceStatus.Absent);
+        int excusedCount = attendances.Count(a => a.Status == AttendanceStatus.Excused);
+
         var totalRevenue = payments.Sum(p => p.PaidAmount);
 
-        // Share percentage
-        var sharePercent = dto.CustomSharePercentage ?? teacher.CustomSharePercentage ?? 25m;
+        // Compensation Model
+        var calcType = dto.CalculationType != default ? dto.CalculationType : teacher.SalaryModel;
+        var sharePercent = dto.CustomSharePercentage ?? teacher.CustomSharePercentage ?? 50m;
+        var fixedAmount = dto.FixedBaseSalary ?? teacher.FixedSalaryAmount ?? 5000000m;
 
         // Salary calculation based on type
         decimal calculatedSalary = 0m;
-        switch (dto.CalculationType)
+        decimal excusedDeduction = 0m;
+        switch (calcType)
         {
             case PayrollType.FixedSalary:
-                calculatedSalary = dto.FixedBaseSalary ?? 3000000m;
+                calculatedSalary = fixedAmount;
                 break;
             case PayrollType.Percentage:
-                calculatedSalary = Math.Round(totalRevenue * (sharePercent / 100m), 2);
+                // Base percentage from own groups revenue
+                var rawShare = Math.Round(totalRevenue * (sharePercent / 100m), 2);
+
+                // Attendance Adjustment:
+                // Absent without excuse (Sababsiz) -> billable, credited to teacher.
+                // Excused absence (Sababli, kasallik) -> not billable, deducted from teacher's share for that lesson.
+                int totalBillableAttendances = presentCount + absentWithoutExcuseCount + excusedCount;
+                if (excusedCount > 0 && totalBillableAttendances > 0 && totalRevenue > 0)
+                {
+                    decimal perAttendanceRevenue = totalRevenue / totalBillableAttendances;
+                    excusedDeduction = Math.Round(excusedCount * perAttendanceRevenue * (sharePercent / 100m), 2);
+                }
+
+                calculatedSalary = Math.Max(0m, rawShare - excusedDeduction);
                 break;
             case PayrollType.PerLesson:
                 var ratePerLesson = dto.FixedBaseSalary ?? 100000m; // Default per-lesson fee
                 calculatedSalary = lessonsTaught * ratePerLesson;
                 break;
             case PayrollType.Combined:
-                var fixedPart = dto.FixedBaseSalary ?? 2000000m;
+                var fixedPart = fixedAmount;
                 var bonusPart = Math.Round(totalRevenue * (sharePercent / 100m), 2);
                 calculatedSalary = fixedPart + bonusPart;
                 break;
         }
+
+        string attNotes = $"Davomat: {presentCount} ta kelgan, {absentWithoutExcuseCount} ta sababsiz (oylikka hisoblandi), {excusedCount} ta sababli ({excusedDeduction:N0} so'm chegirildi).";
 
         // Check if payroll record already exists for this teacher & period
         var existing = await _context.TeacherPayrolls
@@ -87,13 +117,14 @@ public class TeacherPayrollService : ITeacherPayrollService
         if (existing != null)
         {
             payroll = existing;
-            payroll.CalculationType = dto.CalculationType;
+            payroll.CalculationType = calcType;
             payroll.LessonsTaught = lessonsTaught;
             payroll.StudentsCount = studentCount;
             payroll.TotalRevenue = totalRevenue;
             payroll.SharePercentage = sharePercent;
             payroll.CalculatedSalary = calculatedSalary;
             payroll.RemainingAmount = Math.Max(0, calculatedSalary - payroll.PaidAmount);
+            payroll.Notes = $"{dto.Year}-{dto.Month:D2} oylik hisob-kitob. {attNotes}";
         }
         else
         {
@@ -103,7 +134,7 @@ public class TeacherPayrollService : ITeacherPayrollService
                 TeacherId = teacher.Id,
                 Year = dto.Year,
                 Month = dto.Month,
-                CalculationType = dto.CalculationType,
+                CalculationType = calcType,
                 LessonsTaught = lessonsTaught,
                 StudentsCount = studentCount,
                 TotalRevenue = totalRevenue,
@@ -111,7 +142,7 @@ public class TeacherPayrollService : ITeacherPayrollService
                 CalculatedSalary = calculatedSalary,
                 PaidAmount = 0m,
                 RemainingAmount = calculatedSalary,
-                Notes = $"{dto.Year}-{dto.Month:D2} oylik hisob-kitob"
+                Notes = $"{dto.Year}-{dto.Month:D2} oylik hisob-kitob. {attNotes}"
             };
             _context.TeacherPayrolls.Add(payroll);
         }

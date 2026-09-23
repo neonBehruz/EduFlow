@@ -149,12 +149,14 @@ export const authApi = {
 };
 
 export const studentApi = {
-  getAll: (params?: { search?: string; groupId?: string; isActive?: boolean; page?: number; pageSize?: number }) =>
+  getAll: (params?: { search?: string; groupId?: string; isActive?: boolean; isBlocked?: boolean; page?: number; pageSize?: number }) =>
     api.get<PagedResult<Student>>('/students', { params }).then((r) => r.data),
   getById: (id: string) => api.get<ApiResponse<StudentDetail>>(`/students/${id}`).then((r) => r.data),
   create: (data: any) => api.post<ApiResponse<Student>>('/students', data).then((r) => r.data),
   update: (id: string, data: any) => api.put<ApiResponse<Student>>(`/students/${id}`, data).then((r) => r.data),
   delete: (id: string) => api.delete<ApiResponse<boolean>>(`/students/${id}`).then((r) => r.data),
+  toggleBlock: (id: string, data: { isBlocked: boolean; reason?: string }) =>
+    api.post<ApiResponse<boolean>>(`/students/${id}/toggle-block`, data).then((r) => r.data),
 };
 
 export const teacherApi = {
@@ -200,7 +202,7 @@ export const subjectApi = {
 export const courseApi = subjectApi;
 
 export const lessonApi = {
-  getAll: (params?: { groupId?: string; date?: string; page?: number; pageSize?: number }) =>
+  getAll: (params?: { groupId?: string; date?: string; descending?: boolean; page?: number; pageSize?: number }) =>
     api.get<PagedResult<Lesson>>('/lessons', { params }).then((r) => r.data),
   getToday: () => api.get<Lesson[]>('/lessons/today').then((r) => r.data),
   getById: (id: string) => api.get<ApiResponse<Lesson>>(`/lessons/${id}`).then((r) => r.data),
@@ -306,6 +308,8 @@ export const superAdminApi = {
   toggleStatus: (id: string) => api.post<ApiResponse<boolean>>(`/admin/organizations/${id}/toggle`).then((r) => r.data),
   changePlan: (id: string, planId: string) =>
     api.post<ApiResponse<boolean>>(`/admin/organizations/${id}/plan/${planId}`).then((r) => r.data),
+  getSystemHealth: () => api.get<ApiResponse<any>>('/admin/system-health').then((r) => r.data),
+  getLogs: (limit = 40) => api.get<ApiResponse<any[]>>(`/admin/logs?limit=${limit}`).then((r) => r.data),
 };
 
 export const extendedDashboardApi = {

@@ -10,6 +10,7 @@ import {
   StudentAttendanceHistoryItemDto,
 } from '../../types';
 import { LoadingSpinner, Badge, EmptyState, Modal } from '../../components/common/UIComponents';
+import { PromotionBanner } from '../../components/common/PromotionBanner';
 import { useLanguage } from '../../context/LanguageContext';
 import {
   BookOpen,
@@ -363,6 +364,9 @@ export const StudentPortalPage: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
+      {/* Promotional Campaign Banner with LocalStorage Persistence */}
+      <PromotionBanner />
+
       {/* Toast Notification */}
       {toastMessage && (
         <div
@@ -496,7 +500,7 @@ export const StudentPortalPage: React.FC = () => {
       )}
 
       {/* Tab Navigation */}
-      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-1 overflow-x-auto">
+      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-1 overflow-x-auto scroll-touch">
         <button
           onClick={() => setActiveTab('dashboard')}
           className={`px-5 py-3 rounded-2xl text-xs font-extrabold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
@@ -714,7 +718,7 @@ export const StudentPortalPage: React.FC = () => {
               </div>
 
               {/* Table */}
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto scroll-touch">
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-[11px] uppercase tracking-wider text-slate-400 font-bold">

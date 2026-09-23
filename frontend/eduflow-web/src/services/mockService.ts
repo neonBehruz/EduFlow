@@ -88,9 +88,9 @@ const INITIAL_SUBJECTS: Subject[] = [
 ];
 
 const INITIAL_TEACHERS: Teacher[] = [
-  { id: 'usr-teacher-1', organizationId: 'org-demo-1', fullName: 'Rustam Ahmedov', phoneNumber: '+998 93 555 44 33', specialization: 'IELTS Instructor (Band 8.5)', groupsCount: 4 },
-  { id: 'usr-teacher-2', organizationId: 'org-demo-1', fullName: 'Dilshod Yusupov', phoneNumber: '+998 90 111 22 33', specialization: 'Senior Frontend Developer', groupsCount: 3 },
-  { id: 'usr-teacher-3', organizationId: 'org-demo-1', fullName: 'Zarina Umarova', phoneNumber: '+998 91 222 33 44', specialization: 'Matematika fani o\'qituvchisi', groupsCount: 3 },
+  { id: 'usr-teacher-1', organizationId: 'org-demo-1', fullName: 'Rustam Ahmedov', phoneNumber: '+998 93 555 44 33', specialization: 'IELTS Instructor (Band 8.5)', groupsCount: 4, salaryModel: 1, customSharePercentage: 50 },
+  { id: 'usr-teacher-2', organizationId: 'org-demo-1', fullName: 'Dilshod Yusupov', phoneNumber: '+998 90 111 22 33', specialization: 'Senior Frontend Developer', groupsCount: 3, salaryModel: 0, fixedSalaryAmount: 6000000 },
+  { id: 'usr-teacher-3', organizationId: 'org-demo-1', fullName: 'Zarina Umarova', phoneNumber: '+998 91 222 33 44', specialization: 'Matematika fani o\'qituvchisi', groupsCount: 3, salaryModel: 1, customSharePercentage: 40 },
 ];
 
 const INITIAL_GROUPS: Group[] = [
@@ -101,12 +101,12 @@ const INITIAL_GROUPS: Group[] = [
 ];
 
 const INITIAL_STUDENTS: Student[] = [
-  { id: 'std-1', organizationId: 'org-demo-1', firstName: 'Alisher', lastName: 'Qodirov', fullName: 'Alisher Qodirov', phoneNumber: '+998 97 777 88 99', birthDate: '2008-04-12', enrollmentDate: '2025-09-01', parentName: 'Sobir Qodirov', parentPhone: '+998 90 999 11 22', isActive: true, averageGrade: 92, attendancePercentage: 96, currentPaymentStatus: 2, groupNames: ['IELTS Band 7.0+'] },
-  { id: 'std-2', organizationId: 'org-demo-1', firstName: 'Malika', lastName: 'Karimova', fullName: 'Malika Karimova', phoneNumber: '+998 90 234 56 78', birthDate: '2007-11-20', enrollmentDate: '2025-10-15', parentName: 'Gulnora Karimova', parentPhone: '+998 90 234 56 70', isActive: true, averageGrade: 88, attendancePercentage: 92, currentPaymentStatus: 2, groupNames: ['React Frontend Bootcamp'] },
-  { id: 'std-3', organizationId: 'org-demo-1', firstName: 'Bobur', lastName: 'Mirzayev', fullName: 'Bobur Mirzayev', phoneNumber: '+998 93 345 67 89', birthDate: '2009-02-05', enrollmentDate: '2025-08-20', parentName: 'Anvar Mirzayev', parentPhone: '+998 93 345 67 80', isActive: true, averageGrade: 79, attendancePercentage: 84, currentPaymentStatus: 3, groupNames: ['Prezident Maktabi Tayyorgarlik'] },
-  { id: 'std-4', organizationId: 'org-demo-1', firstName: 'Jasur', lastName: 'Rahimov', fullName: 'Jasur Rahimov', phoneNumber: '+998 94 456 78 90', birthDate: '2008-07-18', enrollmentDate: '2025-11-01', parentName: 'Nodir Rahimov', parentPhone: '+998 94 456 78 00', isActive: true, averageGrade: 95, attendancePercentage: 98, currentPaymentStatus: 2, groupNames: ['IELTS Band 7.0+', 'React Frontend Bootcamp'] },
-  { id: 'std-5', organizationId: 'org-demo-1', firstName: 'Nilufar', lastName: 'Saidova', fullName: 'Nilufar Saidova', phoneNumber: '+998 99 567 89 01', birthDate: '2009-09-30', enrollmentDate: '2025-12-10', parentName: 'Shahlo Saidova', parentPhone: '+998 99 567 89 00', isActive: true, averageGrade: 85, attendancePercentage: 90, currentPaymentStatus: 1, groupNames: ['General English Intermediate'] },
-  { id: 'std-6', organizationId: 'org-demo-1', firstName: 'Sardor', lastName: 'Ergashev', fullName: 'Sardor Ergashev', phoneNumber: '+998 91 678 90 12', birthDate: '2008-01-14', enrollmentDate: '2026-01-05', parentName: 'Botir Ergashev', parentPhone: '+998 91 678 90 00', isActive: true, averageGrade: 90, attendancePercentage: 94, currentPaymentStatus: 2, groupNames: ['React Frontend Bootcamp'] },
+  { id: 'std-1', organizationId: 'org-demo-1', firstName: 'Alisher', lastName: 'Qodirov', fullName: 'Alisher Qodirov', phoneNumber: '+998 97 777 88 99', birthDate: '2008-04-12', enrollmentDate: '2025-09-01', parentName: 'Sobir Qodirov', parentPhone: '+998 90 999 11 22', isActive: true, averageGrade: 92, attendancePercentage: 96, currentPaymentStatus: 2, isPaymentBlocked: false, paidUntil: '2026-10-15T00:00:00Z', groupNames: ['IELTS Band 7.0+'] },
+  { id: 'std-2', organizationId: 'org-demo-1', firstName: 'Malika', lastName: 'Karimova', fullName: 'Malika Karimova', phoneNumber: '+998 90 234 56 78', birthDate: '2007-11-20', enrollmentDate: '2025-10-15', parentName: 'Gulnora Karimova', parentPhone: '+998 90 234 56 70', isActive: true, averageGrade: 88, attendancePercentage: 92, currentPaymentStatus: 2, isPaymentBlocked: false, paidUntil: '2026-10-12T00:00:00Z', groupNames: ['React Frontend Bootcamp'] },
+  { id: 'std-3', organizationId: 'org-demo-1', firstName: 'Bobur', lastName: 'Mirzayev', fullName: 'Bobur Mirzayev', phoneNumber: '+998 93 345 67 89', birthDate: '2009-02-05', enrollmentDate: '2025-08-20', parentName: 'Anvar Mirzayev', parentPhone: '+998 93 345 67 80', isActive: true, averageGrade: 79, attendancePercentage: 84, currentPaymentStatus: 3, isPaymentBlocked: true, paidUntil: '2026-03-10T00:00:00Z', paymentBlockReason: "Oylik to'lov muddati o'tgan (darsga kiritilmasin)", groupNames: ['Prezident Maktabi Tayyorgarlik'] },
+  { id: 'std-4', organizationId: 'org-demo-1', firstName: 'Jasur', lastName: 'Rahimov', fullName: 'Jasur Rahimov', phoneNumber: '+998 94 456 78 90', birthDate: '2008-07-18', enrollmentDate: '2025-11-01', parentName: 'Nodir Rahimov', parentPhone: '+998 94 456 78 00', isActive: true, averageGrade: 95, attendancePercentage: 98, currentPaymentStatus: 2, isPaymentBlocked: false, paidUntil: '2026-10-20T00:00:00Z', groupNames: ['IELTS Band 7.0+', 'React Frontend Bootcamp'] },
+  { id: 'std-5', organizationId: 'org-demo-1', firstName: 'Nilufar', lastName: 'Saidova', fullName: 'Nilufar Saidova', phoneNumber: '+998 99 567 89 01', birthDate: '2009-09-30', enrollmentDate: '2025-12-10', parentName: 'Shahlo Saidova', parentPhone: '+998 99 567 89 00', isActive: true, averageGrade: 85, attendancePercentage: 90, currentPaymentStatus: 1, isPaymentBlocked: false, paidUntil: '2026-10-05T00:00:00Z', groupNames: ['General English Intermediate'] },
+  { id: 'std-6', organizationId: 'org-demo-1', firstName: 'Sardor', lastName: 'Ergashev', fullName: 'Sardor Ergashev', phoneNumber: '+998 91 678 90 12', birthDate: '2008-01-14', enrollmentDate: '2026-01-05', parentName: 'Botir Ergashev', parentPhone: '+998 91 678 90 00', isActive: true, averageGrade: 90, attendancePercentage: 94, currentPaymentStatus: 2, isPaymentBlocked: false, paidUntil: '2026-10-18T00:00:00Z', groupNames: ['React Frontend Bootcamp'] },
 ];
 
 const INITIAL_LESSONS: Lesson[] = [
@@ -186,6 +186,12 @@ function getStored<T>(key: string, defaultVal: T): T {
   } catch {
     return defaultVal;
   }
+}
+
+function setStored<T>(key: string, val: T): void {
+  try {
+    localStorage.setItem(`eduflow_mock_${key}`, JSON.stringify(val));
+  } catch {}
 }
 
 export function handleMockApiRequest(url: string, method: string, data?: any): any | null {
@@ -442,6 +448,32 @@ export function handleMockApiRequest(url: string, method: string, data?: any): a
         errors: [],
         data: stdDetail,
       },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: {},
+    };
+  }
+
+  if (normUrl.includes('/toggle-block') && m === 'post') {
+    const studentId = normUrl.replace('/students/', '').replace('/toggle-block', '');
+    const students = getStored<Student[]>('students', INITIAL_STUDENTS);
+    let payload = data;
+    if (typeof payload === 'string') {
+      try { payload = JSON.parse(payload); } catch {}
+    }
+    const updated = students.map((s) =>
+      s.id === studentId
+        ? {
+            ...s,
+            isPaymentBlocked: payload?.isBlocked ?? true,
+            paymentBlockReason: payload?.reason,
+          }
+        : s
+    );
+    setStored('students', updated);
+    return {
+      data: { success: true, message: 'Talaba holati yangilandi', errors: [], data: true },
       status: 200,
       statusText: 'OK',
       headers: {},

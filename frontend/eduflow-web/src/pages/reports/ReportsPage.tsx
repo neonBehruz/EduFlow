@@ -53,7 +53,7 @@ export const ReportsPage: React.FC = () => {
       />
 
       {/* Tabs with mobile overflow scroll */}
-      <div className="flex bg-white dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs max-w-xl gap-1 overflow-x-auto">
+      <div className="flex bg-white dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs max-w-xl gap-1 overflow-x-auto scroll-touch">
         {[
           { id: 'attendance', label: t('reports.attendance', 'Davomat hisoboti'), icon: CheckCircle },
           { id: 'payments', label: t('reports.financial', 'Moliya va To‘lovlar'), icon: CreditCard },
@@ -64,7 +64,7 @@ export const ReportsPage: React.FC = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex-1 py-2 px-3 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+              className={`flex-1 py-2 px-3 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap ${
                 activeTab === tab.id
                   ? 'bg-[#0050cb] text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'

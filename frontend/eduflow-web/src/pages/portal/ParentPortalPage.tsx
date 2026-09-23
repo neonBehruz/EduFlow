@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { parentPortalApi, feedbackApi } from '../../services/api';
 import { ParentDashboardDto, ParentChildProfileDto } from '../../types';
 import { LoadingSpinner, Badge, Modal } from '../../components/common/UIComponents';
+import { PromotionBanner } from '../../components/common/PromotionBanner';
 import { useLanguage } from '../../context/LanguageContext';
 import {
   Users,
@@ -260,6 +261,9 @@ export const ParentPortalPage: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
+      {/* Promotional Campaign Banner with LocalStorage Persistence */}
+      <PromotionBanner />
+
       {/* Top Banner Notice if sample preview is active */}
       {!hasRealChildren && (
         <div className="bg-amber-500/10 border border-amber-500/30 dark:bg-amber-950/30 p-4 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
@@ -324,7 +328,7 @@ export const ParentPortalPage: React.FC = () => {
       </div>
 
       {/* Child Tabs Switcher */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1">
+      <div className="flex items-center gap-2 overflow-x-auto scroll-touch pb-1">
         {hasRealChildren ? (
           realChildren.map((child) => {
             const childId = child.id || child.studentId || '';

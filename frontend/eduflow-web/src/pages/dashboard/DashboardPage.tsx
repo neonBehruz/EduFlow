@@ -5,6 +5,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { dashboardApi, extendedDashboardApi } from '../../services/api';
 import { DashboardStats, ExtendedDashboardStats } from '../../types';
 import { LoadingSpinner, Badge, EmptyState } from '../../components/common/UIComponents';
+import { PromotionBanner } from '../../components/common/PromotionBanner';
 import { DashboardHero } from '../../components/dashboard/DashboardHero';
 import { TeacherDashboard } from '../../components/dashboard/TeacherDashboard';
 import { ParentPortalPage } from '../portal/ParentPortalPage';
@@ -48,7 +49,7 @@ export const DashboardPage: React.FC = () => {
 };
 
 const AdminDashboardView: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [extStats, setExtStats] = useState<ExtendedDashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -110,69 +111,72 @@ const AdminDashboardView: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
+      {/* Promotional Campaign Banner with LocalStorage Persistence */}
+      <PromotionBanner />
+
       {/* Animated Interactive Dashboard Hero Banner */}
       <DashboardHero />
 
       {/* Quick Actions for Learning Center Admin */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 3xl:grid-cols-4 gap-2.5 sm:gap-3.5 3xl:gap-5">
         <Link
           to="/students"
-          className="group relative overflow-hidden bg-white/80 dark:bg-slate-900/80 hover:bg-blue-50/70 dark:hover:bg-blue-950/40 p-4 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs hover:shadow-md transition-all flex items-center gap-3 backdrop-blur-md cursor-pointer hover:-translate-y-0.5"
+          className="group relative overflow-hidden bg-white/80 dark:bg-slate-900/80 hover:bg-blue-50/70 dark:hover:bg-blue-950/40 p-3.5 sm:p-4 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs hover:shadow-md transition-all flex items-center gap-3 backdrop-blur-md cursor-pointer hover:-translate-y-0.5"
         >
-          <div className="w-10 h-10 rounded-2xl bg-blue-100 dark:bg-blue-900/60 text-[#0050cb] dark:text-blue-300 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-            <UserPlus className="w-5 h-5" />
+          <div className="w-9 h-9 sm:w-10 sm:h-10 3xl:w-12 3xl:h-12 rounded-2xl bg-blue-100 dark:bg-blue-900/60 text-[#0050cb] dark:text-blue-300 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+            <UserPlus className="w-5 h-5 3xl:w-6 3xl:h-6" />
           </div>
-          <div>
-            <span className="text-xs font-bold text-slate-800 dark:text-white block">+ {t('header.new_student', 'O‘quvchi qo‘shish')}</span>
-            <span className="text-[10px] text-slate-500 dark:text-slate-400">{t('action.register_student_sub', 'Ro‘yxatga olish')}</span>
+          <div className="min-w-0">
+            <span className="text-xs 3xl:text-sm font-bold text-slate-800 dark:text-white block truncate">+ {t('header.new_student', 'O‘quvchi qo‘shish')}</span>
+            <span className="text-[10px] 3xl:text-xs text-slate-500 dark:text-slate-400 truncate block">{t('action.register_student_sub', 'Ro‘yxatga olish')}</span>
           </div>
         </Link>
 
         <Link
           to="/teachers"
-          className="group relative overflow-hidden bg-white/80 dark:bg-slate-900/80 hover:bg-purple-50/70 dark:hover:bg-purple-950/40 p-4 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs hover:shadow-md transition-all flex items-center gap-3 backdrop-blur-md cursor-pointer hover:-translate-y-0.5"
+          className="group relative overflow-hidden bg-white/80 dark:bg-slate-900/80 hover:bg-purple-50/70 dark:hover:bg-purple-950/40 p-3.5 sm:p-4 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs hover:shadow-md transition-all flex items-center gap-3 backdrop-blur-md cursor-pointer hover:-translate-y-0.5"
         >
-          <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-900/60 text-purple-600 dark:text-purple-300 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-            <GraduationCap className="w-5 h-5" />
+          <div className="w-9 h-9 sm:w-10 sm:h-10 3xl:w-12 3xl:h-12 rounded-2xl bg-purple-100 dark:bg-purple-900/60 text-purple-600 dark:text-purple-300 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+            <GraduationCap className="w-5 h-5 3xl:w-6 3xl:h-6" />
           </div>
-          <div>
-            <span className="text-xs font-bold text-slate-800 dark:text-white block">+ {t('header.new_teacher', 'O‘qituvchi qo‘shish')}</span>
-            <span className="text-[10px] text-slate-500 dark:text-slate-400">{t('action.assign_teacher_sub', 'Mentor biriktirish')}</span>
+          <div className="min-w-0">
+            <span className="text-xs 3xl:text-sm font-bold text-slate-800 dark:text-white block truncate">+ {t('header.new_teacher', 'O‘qituvchi qo‘shish')}</span>
+            <span className="text-[10px] 3xl:text-xs text-slate-500 dark:text-slate-400 truncate block">{t('action.assign_teacher_sub', 'Mentor biriktirish')}</span>
           </div>
         </Link>
 
         <Link
           to="/groups"
-          className="group relative overflow-hidden bg-white/80 dark:bg-slate-900/80 hover:bg-amber-50/70 dark:hover:bg-amber-950/40 p-4 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs hover:shadow-md transition-all flex items-center gap-3 backdrop-blur-md cursor-pointer hover:-translate-y-0.5"
+          className="group relative overflow-hidden bg-white/80 dark:bg-slate-900/80 hover:bg-amber-50/70 dark:hover:bg-amber-950/40 p-3.5 sm:p-4 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs hover:shadow-md transition-all flex items-center gap-3 backdrop-blur-md cursor-pointer hover:-translate-y-0.5"
         >
-          <div className="w-10 h-10 rounded-2xl bg-amber-100 dark:bg-amber-900/60 text-amber-600 dark:text-amber-300 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-            <UsersRound className="w-5 h-5" />
+          <div className="w-9 h-9 sm:w-10 sm:h-10 3xl:w-12 3xl:h-12 rounded-2xl bg-amber-100 dark:bg-amber-900/60 text-amber-600 dark:text-amber-300 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+            <UsersRound className="w-5 h-5 3xl:w-6 3xl:h-6" />
           </div>
-          <div>
-            <span className="text-xs font-bold text-slate-800 dark:text-white block">+ {t('header.new_group', 'Yangi Guruh')}</span>
-            <span className="text-[10px] text-slate-500 dark:text-slate-400">{t('action.create_group_sub', 'Kurs ochish')}</span>
+          <div className="min-w-0">
+            <span className="text-xs 3xl:text-sm font-bold text-slate-800 dark:text-white block truncate">+ {t('header.new_group', 'Yangi Guruh')}</span>
+            <span className="text-[10px] 3xl:text-xs text-slate-500 dark:text-slate-400 truncate block">{t('action.create_group_sub', 'Kurs ochish')}</span>
           </div>
         </Link>
 
         <Link
           to="/attendance"
-          className="group relative overflow-hidden bg-white/80 dark:bg-slate-900/80 hover:bg-emerald-50/70 dark:hover:bg-emerald-950/40 p-4 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs hover:shadow-md transition-all flex items-center gap-3 backdrop-blur-md cursor-pointer hover:-translate-y-0.5"
+          className="group relative overflow-hidden bg-white/80 dark:bg-slate-900/80 hover:bg-emerald-50/70 dark:hover:bg-emerald-950/40 p-3.5 sm:p-4 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs hover:shadow-md transition-all flex items-center gap-3 backdrop-blur-md cursor-pointer hover:-translate-y-0.5"
         >
-          <div className="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-emerald-900/60 text-emerald-600 dark:text-emerald-300 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-            <CalendarCheck2 className="w-5 h-5" />
+          <div className="w-9 h-9 sm:w-10 sm:h-10 3xl:w-12 3xl:h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-900/60 text-emerald-600 dark:text-emerald-300 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+            <CalendarCheck2 className="w-5 h-5 3xl:w-6 3xl:h-6" />
           </div>
-          <div>
-            <span className="text-xs font-bold text-slate-800 dark:text-white block">{t('header.take_attendance', 'Davomat qilish')}</span>
-            <span className="text-[10px] text-slate-500 dark:text-slate-400">{t('action.quick_mark_sub', 'Tezkor belgilash')}</span>
+          <div className="min-w-0">
+            <span className="text-xs 3xl:text-sm font-bold text-slate-800 dark:text-white block truncate">{t('header.take_attendance', 'Davomat qilish')}</span>
+            <span className="text-[10px] 3xl:text-xs text-slate-500 dark:text-slate-400 truncate block">{t('action.quick_mark_sub', 'Tezkor belgilash')}</span>
           </div>
         </Link>
       </div>
 
       {/* Period Filter Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white/70 dark:bg-slate-900/70 p-3.5 rounded-3xl border border-slate-200/80 dark:border-slate-800 backdrop-blur-md">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white/70 dark:bg-slate-900/70 p-3.5 3xl:p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 backdrop-blur-md">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{t('period.analysis', 'Tahlil davri:')}</span>
-          <span className="text-[11px] font-bold text-[#0050cb] dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-0.5 rounded-lg border border-blue-100 dark:border-blue-900">
+          <span className="text-xs 3xl:text-sm font-bold text-slate-700 dark:text-slate-300">{t('period.analysis', 'Tahlil davri:')}</span>
+          <span className="text-[11px] 3xl:text-xs font-bold text-[#0050cb] dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-0.5 rounded-lg border border-blue-100 dark:border-blue-900">
             {period === 'today' && t('period.today', 'Bugun')}
             {period === '7d' && t('period.7d_full', 'So‘nggi 7 kun')}
             {period === '30d' && t('period.30d_full', 'So‘nggi 30 kun')}
@@ -182,7 +186,7 @@ const AdminDashboardView: React.FC = () => {
             {period === 'all' && t('period.all_full', 'Barcha davr')}
           </span>
         </div>
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 sm:pb-0 scroll-touch">
           {[
             { id: 'today', labelKey: 'period.today', label: 'Bugun' },
             { id: '7d', labelKey: 'period.7d', label: '7 kun' },
@@ -195,7 +199,7 @@ const AdminDashboardView: React.FC = () => {
             <button
               key={btn.id}
               onClick={() => setPeriod(btn.id as any)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 ${
+              className={`px-3 sm:px-3.5 py-1.5 3xl:px-5 3xl:py-2 rounded-xl text-xs 3xl:text-sm font-bold transition-all cursor-pointer shrink-0 ${
                 period === btn.id
                   ? 'bg-[#0050cb] text-white shadow-xs'
                   : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
@@ -209,75 +213,75 @@ const AdminDashboardView: React.FC = () => {
 
       {/* 16 Extended Production Metrics Grid */}
       {extStats && (
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-          <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs backdrop-blur-md">
-            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block">{t('dash.expected_revenue', 'Kutilayotgan tushum')}</span>
-            <p className="text-xl font-black text-slate-900 dark:text-white mt-1">
-              {((extStats as any)?.totalExpectedRevenue ?? (extStats as any)?.monthlyRevenue ?? 0).toLocaleString()} <span className="text-[10px] text-slate-400">UZS</span>
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 3xl:grid-cols-4 4xl:grid-cols-8 gap-3 sm:gap-3.5 3xl:gap-5">
+          <div className="bg-white/80 dark:bg-slate-900/80 p-4 3xl:p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs backdrop-blur-md">
+            <span className="text-[11px] 3xl:text-xs font-semibold text-slate-500 dark:text-slate-400 block">{t('dash.expected_revenue', 'Kutilayotgan tushum')}</span>
+            <p className="text-xl 3xl:text-2xl font-black text-slate-900 dark:text-white mt-1">
+              {((extStats as any)?.totalExpectedRevenue ?? (extStats as any)?.monthlyRevenue ?? 0).toLocaleString()} <span className="text-[10px] 3xl:text-xs text-slate-400">UZS</span>
             </p>
-            <span className="text-[10px] text-slate-400 mt-1 block">{t('dash.expected_sub', 'Davr bo‘yicha kurs to‘lovlari')}</span>
+            <span className="text-[10px] 3xl:text-xs text-slate-400 mt-1 block">{t('dash.expected_sub', 'Davr bo‘yicha kurs to‘lovlari')}</span>
           </div>
 
-          <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs backdrop-blur-md">
-            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block">{t('dash.collected_revenue', 'Yig‘ilgan tushum')}</span>
-            <p className="text-xl font-black text-emerald-600 dark:text-emerald-400 mt-1">
-              {((extStats as any)?.totalCollectedRevenue ?? (extStats as any)?.monthlyRevenue ?? 0).toLocaleString()} <span className="text-[10px] text-slate-400">UZS</span>
+          <div className="bg-white/80 dark:bg-slate-900/80 p-4 3xl:p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs backdrop-blur-md">
+            <span className="text-[11px] 3xl:text-xs font-semibold text-slate-500 dark:text-slate-400 block">{t('dash.collected_revenue', 'Yig‘ilgan tushum')}</span>
+            <p className="text-xl 3xl:text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1">
+              {((extStats as any)?.totalCollectedRevenue ?? (extStats as any)?.monthlyRevenue ?? 0).toLocaleString()} <span className="text-[10px] 3xl:text-xs text-slate-400">UZS</span>
             </p>
-            <span className="text-[10px] text-emerald-600 font-semibold mt-1 block">{t('dash.collected_sub', 'Haqiqiy to‘langan')}</span>
+            <span className="text-[10px] 3xl:text-xs text-emerald-600 font-semibold mt-1 block">{t('dash.collected_sub', 'Haqiqiy to‘langan')}</span>
           </div>
 
-          <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs backdrop-blur-md">
-            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block">{t('dash.debt', 'Qarzdorlik')}</span>
-            <p className="text-xl font-black text-rose-600 dark:text-rose-400 mt-1">
-              {((extStats as any)?.totalOutstandingDebt ?? (extStats as any)?.outstandingPayments ?? 0).toLocaleString()} <span className="text-[10px] text-slate-400">UZS</span>
+          <div className="bg-white/80 dark:bg-slate-900/80 p-4 3xl:p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs backdrop-blur-md">
+            <span className="text-[11px] 3xl:text-xs font-semibold text-slate-500 dark:text-slate-400 block">{t('dash.debt', 'Qarzdorlik')}</span>
+            <p className="text-xl 3xl:text-2xl font-black text-rose-600 dark:text-rose-400 mt-1">
+              {((extStats as any)?.totalOutstandingDebt ?? (extStats as any)?.outstandingPayments ?? 0).toLocaleString()} <span className="text-[10px] 3xl:text-xs text-slate-400">UZS</span>
             </p>
-            <span className="text-[10px] text-rose-600 font-semibold mt-1 block">{t('dash.debt_sub', 'Undirilishi lozim')}</span>
+            <span className="text-[10px] 3xl:text-xs text-rose-600 font-semibold mt-1 block">{t('dash.debt_sub', 'Undirilishi lozim')}</span>
           </div>
 
-          <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs backdrop-blur-md">
-            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block">{t('dash.net_revenue', 'Markaz sof tushumi')}</span>
-            <p className="text-xl font-black text-blue-600 dark:text-blue-400 mt-1">
-              {((extStats as any)?.centerNetRevenue ?? (extStats as any)?.netProfit ?? 0).toLocaleString()} <span className="text-[10px] text-slate-400">UZS</span>
+          <div className="bg-white/80 dark:bg-slate-900/80 p-4 3xl:p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs backdrop-blur-md">
+            <span className="text-[11px] 3xl:text-xs font-semibold text-slate-500 dark:text-slate-400 block">{t('dash.net_revenue', 'Markaz sof tushumi')}</span>
+            <p className="text-xl 3xl:text-2xl font-black text-blue-600 dark:text-blue-400 mt-1">
+              {((extStats as any)?.centerNetRevenue ?? (extStats as any)?.netProfit ?? 0).toLocaleString()} <span className="text-[10px] 3xl:text-xs text-slate-400">UZS</span>
             </p>
-            <span className="text-[10px] text-blue-600 font-semibold mt-1 block">{t('dash.net_sub', 'Oyliklar chegirilgach')}</span>
+            <span className="text-[10px] 3xl:text-xs text-blue-600 font-semibold mt-1 block">{t('dash.net_sub', 'Oyliklar chegirilgach')}</span>
           </div>
 
-          <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs backdrop-blur-md">
-            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block">{t('dash.attendance_rate', 'Davomat ko‘rsatkichi')}</span>
-            <p className="text-xl font-black text-slate-900 dark:text-white mt-1">
+          <div className="bg-white/80 dark:bg-slate-900/80 p-4 3xl:p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs backdrop-blur-md">
+            <span className="text-[11px] 3xl:text-xs font-semibold text-slate-500 dark:text-slate-400 block">{t('dash.attendance_rate', 'Davomat ko‘rsatkichi')}</span>
+            <p className="text-xl 3xl:text-2xl font-black text-slate-900 dark:text-white mt-1">
               {((extStats as any)?.attendanceRatePercentage ?? (extStats as any)?.attendanceRate ?? 0)}%
             </p>
-            <span className="text-[10px] text-emerald-600 font-semibold mt-1 block">{t('dash.attendance_sub', 'O‘rtacha dars qatnashuvi')}</span>
+            <span className="text-[10px] 3xl:text-xs text-emerald-600 font-semibold mt-1 block">{t('dash.attendance_sub', 'O‘rtacha dars qatnashuvi')}</span>
           </div>
 
-          <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs backdrop-blur-md">
-            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block">{t('dash.average_grade', 'O‘rtacha baho')}</span>
-            <p className="text-xl font-black text-slate-900 dark:text-white mt-1">
-              {((extStats as any)?.averageStudentGrade ?? 0)} <span className="text-[10px] text-slate-400">/ 100</span>
+          <div className="bg-white/80 dark:bg-slate-900/80 p-4 3xl:p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs backdrop-blur-md">
+            <span className="text-[11px] 3xl:text-xs font-semibold text-slate-500 dark:text-slate-400 block">{t('dash.average_grade', 'O‘rtacha baho')}</span>
+            <p className="text-xl 3xl:text-2xl font-black text-slate-900 dark:text-white mt-1">
+              {((extStats as any)?.averageStudentGrade ?? 0)} <span className="text-[10px] 3xl:text-xs text-slate-400">/ 100</span>
             </p>
-            <span className="text-[10px] text-slate-400 mt-1 block">{t('dash.average_grade_sub', 'Akademik o‘zlashtirish')}</span>
+            <span className="text-[10px] 3xl:text-xs text-slate-400 mt-1 block">{t('dash.average_grade_sub', 'Akademik o‘zlashtirish')}</span>
           </div>
 
-          <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs backdrop-blur-md">
-            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block">{t('dash.room_occupancy', 'Xonalar bandligi')}</span>
-            <p className="text-xl font-black text-slate-900 dark:text-white mt-1">
+          <div className="bg-white/80 dark:bg-slate-900/80 p-4 3xl:p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs backdrop-blur-md">
+            <span className="text-[11px] 3xl:text-xs font-semibold text-slate-500 dark:text-slate-400 block">{t('dash.room_occupancy', 'Xonalar bandligi')}</span>
+            <p className="text-xl 3xl:text-2xl font-black text-slate-900 dark:text-white mt-1">
               {((extStats as any)?.roomOccupancyRatePercentage ?? 0)}%
             </p>
-            <span className="text-[10px] text-slate-400 mt-1 block">{((extStats as any)?.roomsCount ?? 0)} {t('dash.active_rooms_suffix', 'ta faol xona')}</span>
+            <span className="text-[10px] 3xl:text-xs text-slate-400 mt-1 block">{((extStats as any)?.roomsCount ?? 0)} {t('dash.active_rooms_suffix', 'ta faol xona')}</span>
           </div>
 
-          <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs backdrop-blur-md">
-            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block">{t('dash.risk_group', 'Risk guruhi')}</span>
-            <p className="text-xl font-black text-rose-600 dark:text-rose-400 mt-1">
-              {((extStats as any)?.highRiskStudentsCount ?? (extStats as any)?.atRiskStudentsCount ?? 0)} <span className="text-[10px] text-slate-400">{t('dash.students_unit', 'nafar')}</span>
+          <div className="bg-white/80 dark:bg-slate-900/80 p-4 3xl:p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs backdrop-blur-md">
+            <span className="text-[11px] 3xl:text-xs font-semibold text-slate-500 dark:text-slate-400 block">{t('dash.risk_group', 'Risk guruhi')}</span>
+            <p className="text-xl 3xl:text-2xl font-black text-rose-600 dark:text-rose-400 mt-1">
+              {((extStats as any)?.highRiskStudentsCount ?? (extStats as any)?.atRiskStudentsCount ?? 0)} <span className="text-[10px] 3xl:text-xs text-slate-400">{t('dash.students_unit', 'nafar')}</span>
             </p>
-            <span className="text-[10px] text-rose-600 font-semibold mt-1 block">{t('dash.high_risk_desc', 'Chiqib ketish xavfi bor')}</span>
+            <span className="text-[10px] 3xl:text-xs text-rose-600 font-semibold mt-1 block">{t('dash.high_risk_desc', 'Chiqib ketish xavfi bor')}</span>
           </div>
         </div>
       )}
 
       {/* Main Stats Bento Grid with Animated Accents */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 3xl:gap-6">
         {/* Total Students */}
         <Link
           to="/students"
@@ -346,7 +350,7 @@ const AdminDashboardView: React.FC = () => {
 
         {/* Today's Lessons */}
         <Link
-          to="/calendar"
+          to={`/${language.toLowerCase()}/lessons`}
           className="group relative bg-white dark:bg-slate-900/90 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer"
         >
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 to-teal-500 opacity-80 group-hover:h-1.5 transition-all" />

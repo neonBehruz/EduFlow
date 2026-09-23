@@ -143,10 +143,14 @@ public record StudentDto(
     decimal AverageGrade,
     decimal AttendancePercentage,
     PaymentStatus CurrentPaymentStatus,
-    List<string> GroupNames
+    List<string> GroupNames,
+    bool IsPaymentBlocked = false,
+    DateTime? PaidUntil = null,
+    string? PaymentBlockReason = null,
+    DateTime? LastPaymentDate = null
 )
 {
-    public StudentDto() : this(default, default, string.Empty, string.Empty, string.Empty, string.Empty, null, default, null, null, null, true, 0, 0, default, new List<string>()) { }
+    public StudentDto() : this(default, default, string.Empty, string.Empty, string.Empty, string.Empty, null, default, null, null, null, true, 0, 0, default, new List<string>(), false, null, null, null) { }
 }
 
 public record CreateStudentDto(
@@ -172,6 +176,11 @@ public record UpdateStudentDto(
     Guid? GroupId = null
 );
 
+public record ToggleStudentBlockDto(
+    bool IsBlocked,
+    string? Reason = null
+);
+
 public record StudentDetailDto(
     Guid Id,
     Guid OrganizationId,
@@ -189,7 +198,11 @@ public record StudentDetailDto(
     PaymentStatus CurrentPaymentStatus,
     List<AttendanceDto> RecentAttendances,
     List<GradeDto> RecentGrades,
-    List<PaymentDto> RecentPayments
+    List<PaymentDto> RecentPayments,
+    bool IsPaymentBlocked = false,
+    DateTime? PaidUntil = null,
+    string? PaymentBlockReason = null,
+    DateTime? LastPaymentDate = null
 );
 #endregion
 
@@ -220,10 +233,13 @@ public record TeacherDto(
     string FullName,
     string PhoneNumber,
     string? Specialization,
-    int GroupsCount
+    int GroupsCount,
+    PayrollType SalaryModel = PayrollType.Percentage,
+    decimal? FixedSalaryAmount = null,
+    decimal? CustomSharePercentage = null
 )
 {
-    public TeacherDto() : this(default, default, null, string.Empty, string.Empty, null, 0) { }
+    public TeacherDto() : this(default, default, null, string.Empty, string.Empty, null, 0, PayrollType.Percentage, null, null) { }
 }
 
 public record CreateTeacherDto(
@@ -231,13 +247,19 @@ public record CreateTeacherDto(
     string PhoneNumber,
     string? Specialization,
     string? Email,
-    string? Password
+    string? Password,
+    PayrollType? SalaryModel = null,
+    decimal? FixedSalaryAmount = null,
+    decimal? CustomSharePercentage = null
 );
 
 public record UpdateTeacherDto(
     string FullName,
     string PhoneNumber,
-    string? Specialization
+    string? Specialization,
+    PayrollType? SalaryModel = null,
+    decimal? FixedSalaryAmount = null,
+    decimal? CustomSharePercentage = null
 );
 #endregion
 
@@ -642,7 +664,10 @@ public record TeacherSalaryReportItemDto(
     decimal TotalCourseFees,
     decimal TotalCollectedFromStudents,
     decimal TeacherSalaryAmount,
-    decimal CenterRetainedAmount
+    decimal CenterRetainedAmount,
+    PayrollType SalaryModel = PayrollType.Percentage,
+    decimal? FixedSalaryAmount = null,
+    int ExcusedAbsenceDeductions = 0
 );
 
 public record FinanceSummaryReportDto(

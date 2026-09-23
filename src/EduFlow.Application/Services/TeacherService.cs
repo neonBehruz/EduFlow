@@ -119,7 +119,10 @@ public class TeacherService : ITeacherService
             UserId = userId,
             FullName = dto.FullName.Trim(),
             PhoneNumber = dto.PhoneNumber.Trim(),
-            Specialization = dto.Specialization
+            Specialization = dto.Specialization,
+            SalaryModel = dto.SalaryModel ?? PayrollType.Percentage,
+            FixedSalaryAmount = dto.FixedSalaryAmount,
+            CustomSharePercentage = dto.CustomSharePercentage
         };
         _context.Teachers.Add(teacher);
 
@@ -145,6 +148,9 @@ public class TeacherService : ITeacherService
         teacher.FullName = dto.FullName.Trim();
         teacher.PhoneNumber = dto.PhoneNumber.Trim();
         teacher.Specialization = dto.Specialization;
+        if (dto.SalaryModel.HasValue) teacher.SalaryModel = dto.SalaryModel.Value;
+        if (dto.FixedSalaryAmount.HasValue) teacher.FixedSalaryAmount = dto.FixedSalaryAmount.Value;
+        if (dto.CustomSharePercentage.HasValue) teacher.CustomSharePercentage = dto.CustomSharePercentage.Value;
         teacher.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();

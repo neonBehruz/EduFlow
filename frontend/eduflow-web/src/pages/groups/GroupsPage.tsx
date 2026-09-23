@@ -245,7 +245,7 @@ export const GroupsPage: React.FC = () => {
           type="groups"
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 4xl:grid-cols-5 gap-4 sm:gap-5">
           {groups.map((group) => (
             <div
               key={group.id}

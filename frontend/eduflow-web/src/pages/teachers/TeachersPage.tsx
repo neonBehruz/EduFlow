@@ -41,6 +41,9 @@ export const TeachersPage: React.FC = () => {
     fullName: '',
     phoneNumber: '',
     specialization: '',
+    salaryModel: 1,
+    fixedSalaryAmount: 5000000,
+    customSharePercentage: 50,
     email: '',
     password: '',
   });
@@ -166,17 +169,27 @@ export const TeachersPage: React.FC = () => {
     e.preventDefault();
     setFormError('');
     try {
+      const salaryModel = Number(formData.salaryModel);
+      const fixedAmount = salaryModel === 0 ? Number(formData.fixedSalaryAmount) : null;
+      const sharePercentage = salaryModel === 1 ? Number(formData.customSharePercentage) : null;
+
       if (selectedTeacher) {
         await teacherApi.update(selectedTeacher.id, {
           fullName: formData.fullName,
           phoneNumber: formData.phoneNumber,
           specialization: formData.specialization,
+          salaryModel,
+          fixedSalaryAmount: fixedAmount,
+          customSharePercentage: sharePercentage,
         });
       } else {
         await teacherApi.create({
           fullName: formData.fullName,
           phoneNumber: formData.phoneNumber,
           specialization: formData.specialization || undefined,
+          salaryModel,
+          fixedSalaryAmount: fixedAmount,
+          customSharePercentage: sharePercentage,
           email: formData.email || undefined,
           password: formData.password || undefined,
         });
@@ -202,13 +215,31 @@ export const TeachersPage: React.FC = () => {
 
   const openCreateModal = () => {
     setSelectedTeacher(null);
-    setFormData({ fullName: '', phoneNumber: '', specialization: '', email: '', password: '' });
+    setFormData({
+      fullName: '',
+      phoneNumber: '',
+      specialization: '',
+      salaryModel: 1,
+      fixedSalaryAmount: 5000000,
+      customSharePercentage: 50,
+      email: '',
+      password: '',
+    });
     setIsModalOpen(true);
   };
 
   const openEditModal = (tItem: Teacher) => {
     setSelectedTeacher(tItem);
-    setFormData({ fullName: tItem.fullName, phoneNumber: tItem.phoneNumber, specialization: tItem.specialization || '', email: '', password: '' });
+    setFormData({
+      fullName: tItem.fullName,
+      phoneNumber: tItem.phoneNumber,
+      specialization: tItem.specialization || '',
+      salaryModel: tItem.salaryModel !== undefined ? tItem.salaryModel : 1,
+      fixedSalaryAmount: tItem.fixedSalaryAmount || 5000000,
+      customSharePercentage: tItem.customSharePercentage || 50,
+      email: '',
+      password: '',
+    });
     setIsModalOpen(true);
   };
 
@@ -246,7 +277,7 @@ export const TeachersPage: React.FC = () => {
           type="teachers"
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 4xl:grid-cols-5 gap-4 sm:gap-5">
           {teachers.map((tItem) => (
             <div
               key={tItem.id}
@@ -280,6 +311,18 @@ export const TeachersPage: React.FC = () => {
                       {t('dash.active_groups', 'Guruhlar')}:{' '}
                       <strong className="text-slate-800 dark:text-white">{tItem.groupsCount} ta</strong>
                     </span>
+                  </div>
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="text-[11px] text-slate-400">Maosh shartnomasi:</span>
+                    {tItem.salaryModel === 0 ? (
+                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-lg border border-emerald-200/60 dark:border-emerald-800/60">
+                        💵 Qat'iy: {(tItem.fixedSalaryAmount || 0).toLocaleString()} UZS
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/40 px-2 py-0.5 rounded-lg border border-purple-200/60 dark:border-purple-800/60">
+                        📊 Ulush: {tItem.customSharePercentage ?? 50}%
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -385,15 +428,24 @@ export const TeachersPage: React.FC = () => {
               <div className="p-3 bg-emerald-50/50 dark:bg-emerald-950/30 border border-emerald-200/60 dark:border-emerald-900/50 rounded-2xl col-span-2 sm:col-span-2">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
-                    {t('payroll.title', 'Oylik Maoshi')}
+                    {detailTeacher.salaryModel === 0 ? "Qat'iy Maosh (Fixed)" : t('payroll.title', 'Oylik Maoshi (Ulush)')}
                   </span>
                   <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
-                    {teacherSalary?.sharePercentage || 20}% ulush
+                    {detailTeacher.salaryModel === 0
+                      ? "O'zgarmas oylik"
+                      : `${detailTeacher.customSharePercentage ?? teacherSalary?.sharePercentage ?? 50}% ulush`}
                   </span>
                 </div>
                 <span className="text-lg font-black text-emerald-700 dark:text-emerald-300 mt-0.5 block">
-                  {(teacherSalary?.teacherSalaryAmount || 0).toLocaleString()} <span className="text-xs font-semibold">UZS</span>
+                  {detailTeacher.salaryModel === 0
+                    ? `${(detailTeacher.fixedSalaryAmount || teacherSalary?.fixedSalaryAmount || 0).toLocaleString()} UZS`
+                    : `${(teacherSalary?.teacherSalaryAmount || 0).toLocaleString()} UZS`}
                 </span>
+                {teacherSalary?.excusedAbsenceDeductions && teacherSalary.excusedAbsenceDeductions > 0 ? (
+                  <span className="text-[10px] font-medium text-amber-600 dark:text-amber-400 block mt-0.5">
+                    Sababli qoldirilgan darslar chegirmasi: -{teacherSalary.excusedAbsenceDeductions.toLocaleString()} UZS
+                  </span>
+                ) : null}
               </div>
             </div>
 
@@ -590,6 +642,108 @@ export const TeachersPage: React.FC = () => {
                 className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white"
               />
             </div>
+          </div>
+
+          {/* Salary Model Section */}
+          <div className="p-3.5 bg-slate-50 dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
+                <span>💰</span> {t('teachers.salary_model_label', "Oylik to'lov shartnomasi (Maosh modeli)")}
+              </label>
+              <span className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold bg-purple-50 dark:bg-purple-950/40 px-2 py-0.5 rounded-md border border-purple-200/50">
+                {t('teachers.salary_model_desc', "Markaz ma'muri nazoratida")}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, salaryModel: 0 })}
+                className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                  Number(formData.salaryModel) === 0
+                    ? 'border-purple-600 bg-purple-50 dark:bg-purple-950/40 text-purple-900 dark:text-purple-100 ring-2 ring-purple-500/20'
+                    : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:border-slate-300'
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <input
+                    type="radio"
+                    name="salaryModel"
+                    checked={Number(formData.salaryModel) === 0}
+                    onChange={() => setFormData({ ...formData, salaryModel: 0 })}
+                    className="text-purple-600 focus:ring-purple-500 cursor-pointer"
+                  />
+                  <span className="text-xs font-bold">{t('teachers.fixed_salary', "Qat'iy oylik (Fixed)")}</span>
+                </div>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">
+                  {t('teachers.fixed_salary_desc', 'Belgilangan aniq summa (masalan: 5,000,000 yoki 6,000,000 UZS).')}
+                </p>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, salaryModel: 1 })}
+                className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                  Number(formData.salaryModel) === 1
+                    ? 'border-purple-600 bg-purple-50 dark:bg-purple-950/40 text-purple-900 dark:text-purple-100 ring-2 ring-purple-500/20'
+                    : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:border-slate-300'
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <input
+                    type="radio"
+                    name="salaryModel"
+                    checked={Number(formData.salaryModel) === 1}
+                    onChange={() => setFormData({ ...formData, salaryModel: 1 })}
+                    className="text-purple-600 focus:ring-purple-500 cursor-pointer"
+                  />
+                  <span className="text-xs font-bold">{t('teachers.percentage_share', 'Foizli ulush (Share)')}</span>
+                </div>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">
+                  {t('teachers.percentage_share_desc', "Faqat o'ziga biriktirilgan guruhlar to'lovidan belgilangan foiz (masalan 50% yoki 40%).")}
+                </p>
+              </button>
+            </div>
+
+            {Number(formData.salaryModel) === 0 ? (
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  {t('teachers.fixed_amount_label', "Qat'iy oylik maosh summasi (UZS)")} *
+                </label>
+                <input
+                  type="number"
+                  required
+                  min={0}
+                  step={50000}
+                  value={formData.fixedSalaryAmount}
+                  onChange={(e) => setFormData({ ...formData, fixedSalaryAmount: Number(e.target.value) })}
+                  placeholder="5000000"
+                  className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white font-semibold"
+                />
+                <p className="text-[10px] text-slate-400 mt-1">
+                  {language === 'RU' ? 'Указанная сумма' : language === 'EN' ? 'Specified amount' : "Ko'rsatilgan miqdor"}: <strong>{Number(formData.fixedSalaryAmount || 0).toLocaleString()} UZS</strong> / {language === 'RU' ? 'месяц' : language === 'EN' ? 'month' : 'oy'}
+                </p>
+              </div>
+            ) : (
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  {t('teachers.share_percent_label', "O'qituvchi ulushi foizi (%)")} *
+                </label>
+                <input
+                  type="number"
+                  required
+                  min={1}
+                  max={100}
+                  value={formData.customSharePercentage}
+                  onChange={(e) => setFormData({ ...formData, customSharePercentage: Number(e.target.value) })}
+                  placeholder="50"
+                  className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white font-semibold"
+                />
+                <p className="text-[10px] text-slate-400 mt-1">
+                  {language === 'RU' ? 'Преподавателю' : language === 'EN' ? 'Teacher share' : "O'qituvchiga"}: <strong className="text-purple-600 dark:text-purple-400">{formData.customSharePercentage || 50}%</strong>, {language === 'RU' ? 'Учебному центру' : language === 'EN' ? 'Center share' : "O'quv markaziga"}: <strong className="text-slate-600 dark:text-slate-300">{100 - (formData.customSharePercentage || 50)}%</strong>.
+                </p>
+              </div>
+            )}
           </div>
 
           {!selectedTeacher && (

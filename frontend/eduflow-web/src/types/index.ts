@@ -66,6 +66,10 @@ export interface Student {
   attendancePercentage: number;
   currentPaymentStatus: PaymentStatus;
   groupNames: string[];
+  isPaymentBlocked?: boolean;
+  paidUntil?: string;
+  paymentBlockReason?: string;
+  lastPaymentDate?: string;
 }
 
 export interface StudentDetail extends Student {
@@ -95,6 +99,9 @@ export interface Teacher {
   phoneNumber: string;
   specialization?: string;
   groupsCount: number;
+  salaryModel?: number; // 1: FixedSalary, 2: Percentage
+  fixedSalaryAmount?: number;
+  customSharePercentage?: number;
 }
 
 export interface Subject {
@@ -266,6 +273,9 @@ export interface TeacherSalaryReportItem {
   totalCollectedFromStudents: number;
   teacherSalaryAmount: number;
   centerRetainedAmount: number;
+  salaryModel?: number;
+  fixedSalaryAmount?: number;
+  excusedAbsenceDeductions?: number;
 }
 
 export interface FinanceSummaryReport {

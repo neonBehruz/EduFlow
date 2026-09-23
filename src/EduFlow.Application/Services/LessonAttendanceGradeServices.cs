@@ -28,10 +28,11 @@ public class LessonService : ILessonService
         _mapper = mapper;
     }
 
-    public async Task<PagedResult<LessonDto>> GetLessonsAsync(Guid? groupId, DateTime? date, int page = 1, int pageSize = 20)
+    public async Task<PagedResult<LessonDto>> GetLessonsAsync(Guid? groupId, DateTime? date, int page = 1, int pageSize = 20, bool descending = false)
     {
         pageSize = Math.Clamp(pageSize, 1, 100);
         var query = _context.Lessons
+            .Include(l => l.Teacher)
             .Include(l => l.Group).ThenInclude(g => g.Subject)
             .Include(l => l.Group).ThenInclude(g => g.Teacher)
             .Include(l => l.Group).ThenInclude(g => g.GroupStudents)
@@ -55,8 +56,8 @@ public class LessonService : ILessonService
         }
 
         var totalCount = await query.CountAsync();
+        query = descending ? query.OrderByDescending(l => l.StartTime) : query.OrderBy(l => l.StartTime);
         var lessons = await query
-            .OrderByDescending(l => l.StartTime)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();

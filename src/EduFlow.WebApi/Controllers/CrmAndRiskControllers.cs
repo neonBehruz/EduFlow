@@ -91,6 +91,7 @@ public class CrmController : BaseApiController
 
 [Authorize(Roles = "CenterAdmin,SuperAdmin")]
 [Route("api/risk-analysis")]
+[Route("api/risk/analysis")]
 public class RiskAnalysisController : BaseApiController
 {
     private readonly IStudentRiskService _riskService;
@@ -100,6 +101,7 @@ public class RiskAnalysisController : BaseApiController
         _riskService = riskService;
     }
 
+    [HttpGet]
     [HttpGet("students")]
     public async Task<ActionResult<ApiResponse<List<StudentRiskDto>>>> GetAtRiskStudents()
     {
